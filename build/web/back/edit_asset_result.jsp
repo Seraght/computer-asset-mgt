@@ -12,7 +12,7 @@
         <%@ include file="/back/menu_left_backend.jsp"%>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <p>${message}</p>
-            <a class="btn btn-default" href="/cam/back/search_form.jsp" role="button">Back</a>
+            <a class="btn btn-default" href="/cam/searchform" role="button">Back</a>
         </div>
 
         <%@include file="/js_tag.html" %>

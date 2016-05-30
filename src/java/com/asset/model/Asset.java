@@ -23,19 +23,22 @@ public class Asset {
     private static final String SQL_INSERT_COMPUTER = "INSERT INTO ASSET"
             + "(asset_year,asset_get,asset_number,type_id,serial,model,brand,price,description,buy_date) "
             + "VALUES(?,?,?,?,?,?,?,?,?,?)";
-    private static final String SQL_UPDATE_COMPUTER = "update asset set asset_number=?,"
-            + "model=?,brand=?,price=?,description=?,type_id=?,serial=? where asset_id=?;";
-    private static final String SQL_SEARCH_COMPUTER = "select * from asset a left join asset_type t on a.type_id = t.type_id where "
-            + "a.asset_year like ? or a.asset_get = ? or a.type_id = ? or "
-            + "a.model like ? or a.brand like ? or a.serial like ? "
-            + "order by a.asset_year,a.asset_get,a.asset_number,a.type_id";
+    private static final String SQL_UPDATE_COMPUTER = "update asset set model=?,"
+            + "brand=?,price=?,description=?,type_id=?,serial=? where asset_year = ? and asset_get = ? and "
+            + "asset_number = ? and type_id = ?";
+    private static final String SQL_SEARCH_COMPUTER = "select * from asset a left join "
+            + "asset_type t on a.type_id = t.type_id where a.asset_status <> 'Delete' "
+            + "and exists (select * from asset a left join asset_type t on a.type_id = t.type_id "
+            + "where a.asset_year like ? or a.asset_get = ? or a.type_id = ? or a.model like ? "
+            + "or a.brand like ? or a.serial like ?) order by a.asset_year,a.asset_get,"
+            + "a.asset_number,a.type_id";
 
     private static final String SQL_SEARCH_BY_NUMBER = "SELECT * FROM asset WHERE "
             + "asset_number = ?";
-    private static final String SQL_SEARCH_BY_ID = "SELECT * FROM asset WHERE "
-            + "asset_id = ?";
-    private static final String SQL_SEARCH_BY_STATUS = "SELECT * FROM asset WHERE "
-            + "has_owner like ?";
+    private static final String SQL_SEARCH_BY_ID = "SELECT * FROM asset a left join asset_type t on a.type_id = t.type_id WHERE "
+            + "a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
+    private static final String SQL_SEARCH_BY_STATUS = "SELECT * FROM asset a left join asset_type t on a.type_id = t.type_id WHERE "
+            + "a.asset_status = ?";
     private static final String SQL_SEARCH_ALL = "SELECT * FROM asset where has_owner = 0";
     private static final String SQL_LIST_ID = "SELECT * FROM asset a left join "
             + "asset_type t on a.type_id = t.type_id WHERE "
@@ -43,6 +46,8 @@ public class Asset {
     private static final String SQL_UPDATE_OWNER = "update asset set "
             + "has_owner=? where asset_id=?";
     private static final String SQL_COUNT_ASSET = "select * from asset ";
+    private static final String SQL_DELETE_ASSET = "update asset a set a.asset_status = 'Delete' "
+            + "where a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
 
 //    public void addComputer(String assetID, double price, ComputerSpec spec, int typeID) {
 //        Computer computer = new Computer(assetID, price, spec, typeID);
@@ -84,7 +89,7 @@ public class Asset {
         return result;
     }
 
-    public boolean updateComputer(Computer updateComputer) {
+    public boolean updateComputer(Computer updateComputer, int typeIDOld) {
         Connection conn = null;
         PreparedStatement stm = null;
         Computer computer = updateComputer;
@@ -93,13 +98,16 @@ public class Asset {
         try {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_UPDATE_COMPUTER);
-            stm.setString(1, computer.getAssetNumber());
-            stm.setString(2, (String) spec.getProperty("model"));
-            stm.setString(3, (String) spec.getProperty("brand"));
-            stm.setDouble(4, computer.getPrice());
-            stm.setString(5, (String) spec.getProperty("description"));
-            stm.setInt(6, computer.getTypeID());
-            stm.setString(7, computer.getSerial());
+            stm.setString(1, (String) spec.getProperty("model"));
+            stm.setString(2, (String) spec.getProperty("brand"));
+            stm.setDouble(3, computer.getPrice());
+            stm.setString(4, (String) spec.getProperty("description"));
+            stm.setInt(5, computer.getTypeID());
+            stm.setString(6, computer.getSerial());
+            stm.setString(7, computer.getAssetYear());
+            stm.setInt(8, computer.getAssetGet());
+            stm.setString(9, computer.getAssetNumber());
+            stm.setInt(10, typeIDOld);
             stm.executeUpdate();
             result = true;
         } catch (SQLException ex) {
@@ -150,16 +158,19 @@ public class Asset {
         return matchingComputer;
     }
 
-    public static Computer searchByID(int assetID) {
+    public static Computer searchByID(String assetYear, int assetGet, String assetNumber, int typeID) {
         Connection conn = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        int searchAsset = assetID;
         Computer matchingComputer = null;
         try {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_SEARCH_BY_ID);
-            stm.setInt(1, searchAsset);
+            stm.setString(1, assetYear);
+            stm.setInt(2, assetGet);
+            stm.setString(3, assetNumber);
+            stm.setInt(4, typeID);
+            
             rs = stm.executeQuery();
             if (rs.next()) {
                 matchingComputer = new Computer(rs);
@@ -225,20 +236,15 @@ public class Asset {
         return matchingComputers;
     }
 
-    public static List<Computer> searchByStatus(int status) {
+    public static List<Computer> searchByStatus(String status) {
         Connection conn = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        int search = status;
         List<Computer> matchingComputers = null;
         try {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_SEARCH_BY_STATUS);
-            if (search == 1 || search == 0) {
-                stm.setInt(1, search);
-            } else {
-                stm.setString(1, "%");
-            }
+            stm.setString(1, status);
             rs = stm.executeQuery();
             while (rs.next()) {
                 if (matchingComputers == null) {
@@ -425,5 +431,33 @@ public class Asset {
                 /* ignored */ }
         }
         return m;
+    }
+    
+    public boolean deleteComputer(String assetYear, int assetGet, String assetNumber, int typeID) {
+        Connection conn = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_DELETE_ASSET);
+            stm.setString(1, assetYear);
+            stm.setInt(2, assetGet);
+            stm.setString(3, assetNumber);
+            stm.setInt(4, typeID);
+            stm.executeUpdate();
+            result = true;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return result;
     }
 }

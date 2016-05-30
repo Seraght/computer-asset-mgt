@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputBuyDate" class="col-sm-2 control-label">วันที่รับมอบ</label>
+                    <label for="inputBuyDate" class="col-sm-2 control-label">วันที่จัดซื้อครุภัณฑ์</label>
                     <div class="col-sm-4">
                         <input type="text" id="dp1" class="span2 datepicker form-control" placeholder="2016-12-01" name="assetBuyDate">
                     </div>

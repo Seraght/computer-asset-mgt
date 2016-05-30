@@ -145,6 +145,14 @@
         <servlet-name>SearchForm</servlet-name>
         <servlet-class>com.asset.servlet.SearchForm</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveAsset</servlet-name>
+        <servlet-class>com.asset.servlet.RemoveAsset</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteAsset</servlet-name>
+        <servlet-class>com.asset.servlet.DeleteAsset</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CreateAsset</servlet-name>
         <url-pattern>/addasset</url-pattern>
@@ -252,6 +260,14 @@
     <servlet-mapping>
         <servlet-name>SearchForm</servlet-name>
         <url-pattern>/searchform</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveAsset</servlet-name>
+        <url-pattern>/removeasset</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteAsset</servlet-name>
+        <url-pattern>/viewdeleteasset</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

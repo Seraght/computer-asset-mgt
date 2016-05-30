@@ -7,10 +7,9 @@ package com.asset.servlet;
 
 import com.asset.model.Asset;
 import com.asset.model.Computer;
-import com.asset.model.ComputerSpec;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,57 +19,33 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Seraght
  */
-public class EditAssetReal extends HttpServlet {
+public class DeleteAsset extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        String target = "";
         String message = "";
-        String assetYear = request.getParameter("assetYear");
-        int assetGet = Integer.parseInt(request.getParameter("assetGet"));
-        String assetNumber = request.getParameter("assetNumber");
-        int typeID = Integer.parseInt(request.getParameter("typeID"));
+        String target = null;
+        int count = 0;
         
-        Computer c = Asset.searchByID(assetYear,assetGet,assetNumber,typeID);
+        List<Computer> c = Asset.searchByStatus("Delete");
         
-        int typeIDNew = Integer.parseInt(request.getParameter("typeIDNew"));
-        double price = Double.parseDouble(request.getParameter("price"));
-        c.setPrice(price);
-        c.setTypeID(typeIDNew);
-        String serial = request.getParameter("serial");
-        c.setSerial(serial);
-        
-        Map properties = new HashMap();
-        properties.put("model", request.getParameter("model"));
-        properties.put("brand", request.getParameter("brand"));
-        properties.put("description", request.getParameter("description"));
-        ComputerSpec addSpec = new ComputerSpec(properties);
-        c.setSpec(addSpec);
-        
-        Asset in = new Asset();
-        Boolean result = in.updateComputer(c, typeID);
-        
-        if (result != false) {
-            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ประสบความสำเร็จ";
-            
+        if (c != null) {
+            for (int i = 1;i <= c.size();i++) {
+                count++;
+            }
+            message = "พบครุภัณฑ์ที่ถูกลบจำนวนทั้งสิ้น " + count + " รายการ";
+            request.setAttribute("computers", c);
         } else {
-            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ไม่สำเร็จ";
+            message = "ไม่พบรายการครุภัณฑ์ที่ค้นหา";
         }
-        target = "/back/edit_asset_result.jsp";
-
+        target = "/back/search_delete_asset.jsp";
         request.setAttribute("message", message);
         getServletContext().getRequestDispatcher(target).forward(request, response);
+        
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

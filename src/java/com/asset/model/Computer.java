@@ -64,6 +64,7 @@ public class Computer {
         this.spec = new ComputerSpec(properties);
         this.assetStatus = rs.getString("asset_status");
         this.typeName = rs.getString("type_name");
+        this.assetBuyDate = rs.getString("buy_date");
     }
 
     public String getSerial() {

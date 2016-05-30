@@ -27,7 +27,7 @@
                         </select>
                     </div>
                     <label for="inputAssetGet" class="col-sm-1 control-label">การได้มา</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
 
                         <select class="form-control" name="assetGet">
                             <c:forEach items="${get}" var="g" varStatus="vs" >
@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <label for="inputTypeID" class="col-sm-2 control-label">ประเภทครุภัณฑ์</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <select class="form-control" name="typeID">
                             <c:forEach items="${properties}" var="p" varStatus="vs" >
                                 <option value="${p.assetTypeID}">${p.assetType}</option>
@@ -67,18 +67,19 @@
                     </div>
                 </div>
             </form>
-            <h4 class="sub-header">${message}</h4>
+            <h3 class="sub-header">${message}</h3>
             <div class="table-responsive">
                 <c:choose>
                     <c:when test="${computers!=null}">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>ลำดับที่</th>
+                                    <th align="center">ลำดับที่</th>
                                     <th>รหัสครุภัณฑ์</th>
                                     <th>ยี่ห้อ</th>
                                     <th>รุ่น</th>
                                     <th>ชนิด</th>
+                                    <th>ลบ</th>
                                     <th>แก้ไข</th>
                                 </tr>
                             </thead>
@@ -98,7 +99,8 @@
                                         <td>${c.spec["brand"]}</td>
                                         <td>${c.spec["model"]}</td>
                                         <td>${c.typeName}</td> 
-                                        <td ><a href="/cam/editasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><img src="images/edit_icon_mini.png" class="img-responsive"></a></td>
+                                        <td><a href="/cam/removeasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}" data-confirm="คุณยืนยันที่จะลบครุภัณฑ์หรือไม่ (ครุภัณฑ์ที่ถูกลบ จะย้ายไปอยู่ในหัวข้อ 'ครุภัณฑ์ที่ถูกลบ')"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                        <td><a href="/cam/editasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -115,5 +117,19 @@
         </div>
 
         <%@include file="/js_tag.html" %>
+        <script>
+            $(document).ready(function () {
+                $('a[data-confirm]').click(function (ev) {
+                    var href = $(this).attr('href');
+                    if (!$('#dataConfirmModal').length) {
+                        $('body').append('<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true" tabindex="-1"><div class="modal-dialog modal-sm"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3 id="dataConfirmLabel">ยืนยันการลบครุภัณฑ์</h3></div><div class="modal-body"></div><div class="modal-footer"><a class="btn btn-primary" id="dataConfirmOK">OK</a><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button></div></div></div></div>');
+                    }
+                    $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+                    $('#dataConfirmOK').attr('href', href);
+                    $('#dataConfirmModal').modal({show: true});
+                    return false;
+                });
+            });
+        </script>
     </body>
 </html>

@@ -18,14 +18,18 @@
             <form class="form-horizontal" action="/cam/editassetreal" method="post">
 
                 <div class="form-group">
-                    <input type="hidden" class="form-control" id="assetID" name="assetID" value="${computer.assetID}">
                     <label for="inputAssetNumber" class="col-sm-2 control-label">หมายเลขครุภัณฑ์</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="assetNumber" name="assetNumber" value="${computer.assetNumber}">
+                        <p class="form-control-static">${computer.assetYear}-${computer.assetGet}-${computer.assetNumber}-${computer.typeID}</p>
+                        
+                        <input type="hidden" name="assetGet" value="${computer.assetGet}">
+                        <input type="hidden" name="assetYear" value="${computer.assetYear}">
+                        <input type="hidden" name="assetNumber" value="${computer.assetNumber}">
+                        <input type="hidden" name="typeID" value="${computer.typeID}">
                     </div>
                     <label for="inputTypeID" class="col-sm-2 control-label">ประเภทครุภัณฑ์</label>
                     <div class="col-sm-3">
-                        <select class="form-control" name="typeID">
+                        <select class="form-control" name="typeIDNew">
                             <c:forEach items="${properties}" var="p" varStatus="vs" >
                                 <c:choose>
                                     <c:when test="${computer.typeID == p.assetTypeID}">
@@ -37,15 +41,16 @@
                                 </c:choose>
                             </c:forEach>
                         </select>
-                        
+
                     </div>
                     <button type="button" class="btn btn-primary" id="myBtn">+</button>
                 </div>
                 <div class="form-group">
-                    <label for="inputModel" class="col-sm-2 control-label">รุ่น</label>
+                    <label for="inputBuyDate" class="col-sm-2 control-label">วันที่จัดซื้อครุภัณฑ์</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="model" value="${computer.spec["model"]}" name="model">
+                        <p class="form-control-static">${computer.assetBuyDate}</p>
                     </div>
+                    
                     <label for="inputBrand" class="col-sm-2 control-label">ยี่ห้อ</label>
                     <div class="col-sm-3">
                         <select class="form-control" name="brand">
@@ -64,14 +69,21 @@
                     <button type="button" class="btn btn-primary" id="myBtnBrand">+</button>
                 </div>
                 <div class="form-group">
-                    <label for="inputPrice" class="col-sm-2 control-label">Serial Number</label>
+                    <label for="inputModel" class="col-sm-2 control-label">รุ่น</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="serial" value="${computer.serial}" name="serial">
+                        <input type="text" class="form-control" id="model" value="${computer.spec["model"]}" name="model">
                     </div>
                     <label for="inputPrice" class="col-sm-2 control-label">ราคา</label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="price" value="${computer.price}" name="price">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPrice" class="col-sm-2 control-label">Serial Number</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="serial" value="${computer.serial}" name="serial">
+                    </div>
+                    
                 </div>
                 <div class="form-group">
                     <label for="inputDescription" class="col-sm-2 control-label">รายละเอียดเพิ่มเติม</label>

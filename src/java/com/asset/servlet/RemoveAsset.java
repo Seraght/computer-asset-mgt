@@ -6,11 +6,8 @@
 package com.asset.servlet;
 
 import com.asset.model.Asset;
-import com.asset.model.Computer;
-import com.asset.model.ComputerSpec;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Seraght
  */
-public class EditAssetReal extends HttpServlet {
+public class RemoveAsset extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,37 +34,22 @@ public class EditAssetReal extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String target = "";
         String message = "";
+        
         String assetYear = request.getParameter("assetYear");
         int assetGet = Integer.parseInt(request.getParameter("assetGet"));
         String assetNumber = request.getParameter("assetNumber");
         int typeID = Integer.parseInt(request.getParameter("typeID"));
         
-        Computer c = Asset.searchByID(assetYear,assetGet,assetNumber,typeID);
+        Asset a = new Asset();
+        Boolean result = a.deleteComputer(assetYear, assetGet, assetNumber, typeID);
         
-        int typeIDNew = Integer.parseInt(request.getParameter("typeIDNew"));
-        double price = Double.parseDouble(request.getParameter("price"));
-        c.setPrice(price);
-        c.setTypeID(typeIDNew);
-        String serial = request.getParameter("serial");
-        c.setSerial(serial);
-        
-        Map properties = new HashMap();
-        properties.put("model", request.getParameter("model"));
-        properties.put("brand", request.getParameter("brand"));
-        properties.put("description", request.getParameter("description"));
-        ComputerSpec addSpec = new ComputerSpec(properties);
-        c.setSpec(addSpec);
-        
-        Asset in = new Asset();
-        Boolean result = in.updateComputer(c, typeID);
-        
-        if (result != false) {
-            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ประสบความสำเร็จ";
+         if (result != false) {
+            message = "ทำการลบครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " เรียบร้อยแล้ว";
             
         } else {
-            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ไม่สำเร็จ";
+            message = "ไม่สามารถลบครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ได้";
         }
-        target = "/back/edit_asset_result.jsp";
+        target = "/back/remove_asset_result.jsp";
 
         request.setAttribute("message", message);
         getServletContext().getRequestDispatcher(target).forward(request, response);
