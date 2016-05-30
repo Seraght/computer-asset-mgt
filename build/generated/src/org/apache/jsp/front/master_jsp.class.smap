@@ -1,0 +1,24 @@
+SMAP
+master_jsp.java
+JSP
+*S JSP
+*F
++ 0 master.jsp
+front/master.jsp
++ 1 header_tag.html
+header_tag.html
++ 2 menu_left_backend.jsp
+back/menu_left_backend.jsp
++ 3 js_tag.html
+js_tag.html
+*L
+5,5:51
+1#1,25:56
+9#0,2:81
+11:83,3
+12:86
+1#2,18:87
+12#0,6:105
+1#3,10:110
+17#0,4:120
+*E
