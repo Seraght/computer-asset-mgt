@@ -48,6 +48,8 @@ public class Asset {
     private static final String SQL_COUNT_ASSET = "select * from asset ";
     private static final String SQL_DELETE_ASSET = "update asset a set a.asset_status = 'Delete' "
             + "where a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
+    private static final String SQL_RESTORE_ASSET = "update asset a set a.asset_status = 'Stock' "
+            + "where a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
 
 //    public void addComputer(String assetID, double price, ComputerSpec spec, int typeID) {
 //        Computer computer = new Computer(assetID, price, spec, typeID);
@@ -440,6 +442,34 @@ public class Asset {
         try {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_DELETE_ASSET);
+            stm.setString(1, assetYear);
+            stm.setInt(2, assetGet);
+            stm.setString(3, assetNumber);
+            stm.setInt(4, typeID);
+            stm.executeUpdate();
+            result = true;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return result;
+    }
+    
+    public boolean restoreComputer(String assetYear, int assetGet, String assetNumber, int typeID) {
+        Connection conn = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_RESTORE_ASSET);
             stm.setString(1, assetYear);
             stm.setInt(2, assetGet);
             stm.setString(3, assetNumber);
