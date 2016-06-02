@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +30,7 @@ public class Asset {
             + "asset_number = ? and type_id = ?";
     private static final String SQL_SEARCH_COMPUTER = "select * from asset a left join "
             + "asset_type t on a.type_id = t.type_id where a.asset_status <> 'Delete' "
-            + "and exists (select * from asset a left join asset_type t on a.type_id = t.type_id "
-            + "where a.asset_year like ? or a.asset_get = ? or a.type_id = ? or a.model like ? "
-            + "or a.brand like ? or a.serial like ?) order by a.asset_year,a.asset_get,"
-            + "a.asset_number,a.type_id";
+            + "and 1=1";
 
     private static final String SQL_SEARCH_BY_NUMBER = "SELECT * FROM asset WHERE "
             + "asset_number = ?";
@@ -39,6 +38,8 @@ public class Asset {
             + "a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
     private static final String SQL_SEARCH_BY_STATUS = "SELECT * FROM asset a left join asset_type t on a.type_id = t.type_id WHERE "
             + "a.asset_status = ?";
+    private static final String SQL_SEARCH_BY_DATE = "SELECT * FROM asset a left join asset_type t on a.type_id = t.type_id WHERE "
+            + "a.buy_date < ?";
     private static final String SQL_SEARCH_ALL = "SELECT * FROM asset where has_owner = 0";
     private static final String SQL_LIST_ID = "SELECT * FROM asset a left join "
             + "asset_type t on a.type_id = t.type_id WHERE "
@@ -50,6 +51,11 @@ public class Asset {
             + "where a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
     private static final String SQL_RESTORE_ASSET = "update asset a set a.asset_status = 'Stock' "
             + "where a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
+    private static final String SQL_DONATE_ASSET = "update asset a set a.asset_status = 'Donate' "
+            + "where a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
+    private static final String SQL_DONATE_INSERT = "insert into asset_donate"
+            + "(donate_date, asset_year, asset_get, asset_number,asset_type) values "
+            + "(?,?,?,?,?)";
 
 //    public void addComputer(String assetID, double price, ComputerSpec spec, int typeID) {
 //        Computer computer = new Computer(assetID, price, spec, typeID);
@@ -203,15 +209,25 @@ public class Asset {
         Computer computer = searchComputer;
         ComputerSpec spec = computer.getSpec();
         List<Computer> matchingComputers = null;
+        String addStagement = SQL_SEARCH_COMPUTER;
         try {
             conn = ConnectionBuilder.getConnection();
-            stm = conn.prepareStatement(SQL_SEARCH_COMPUTER);
-            stm.setString(1, "%" + computer.getAssetYear() + "%");
-            stm.setInt(2, computer.getAssetGet());
-            stm.setInt(3, computer.getTypeID());
-            stm.setString(4, "%" + (String) spec.getProperty("model") + "%");
-            stm.setString(5, "%" + (String) spec.getProperty("brand") + "%");
-            stm.setString(6, "%" + computer.getSerial());
+            if (computer.getAssetYear() != null) {
+                addStagement += " and a.asset_year like '%" + computer.getAssetYear() + "%'";
+            } else if (computer.getAssetGet() != 0) {
+                addStagement += " and a.asset_get = " + computer.getAssetGet();
+            } else if (computer.getTypeID() != 0) {
+                addStagement += " and a.type_id = " + computer.getTypeID();
+            } else if ((String) spec.getProperty("model") != "") {
+                addStagement += " and a.model like '%" + (String) spec.getProperty("model") + "%'";
+            } else if ((String) spec.getProperty("brand") != "") {
+                addStagement += " and a.brand like '%" + (String) spec.getProperty("brand") + "%'";
+            } else if (computer.getSerial() != null) {
+                addStagement += " and a.serial like '%" + computer.getSerial() + "%'";
+            }
+            addStagement += " order by a.type_id,a.asset_year,a.asset_get,a.asset_number";
+            
+            stm = conn.prepareStatement(addStagement);
             rs = stm.executeQuery();
             while (rs.next()) {
                 if (matchingComputers == null) {
@@ -221,6 +237,7 @@ public class Asset {
             }
         } catch (SQLException ex) {
             System.out.println(ex);
+            System.out.println(stm);
         } finally {
             try {
                 rs.close();
@@ -247,6 +264,41 @@ public class Asset {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_SEARCH_BY_STATUS);
             stm.setString(1, status);
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                if (matchingComputers == null) {
+                    matchingComputers = new ArrayList<>();
+                }
+                matchingComputers.add(new Computer(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return matchingComputers;
+    }
+    
+    public static List<Computer> searchByDate(String date) {
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        List<Computer> matchingComputers = null;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_SEARCH_BY_DATE);
+            stm.setString(1, date+ '%');
             rs = stm.executeQuery();
             while (rs.next()) {
                 if (matchingComputers == null) {
@@ -474,6 +526,41 @@ public class Asset {
             stm.setInt(2, assetGet);
             stm.setString(3, assetNumber);
             stm.setInt(4, typeID);
+            stm.executeUpdate();
+            result = true;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return result;
+    }
+    
+    public boolean donateComputer(String assetYear, int assetGet, String assetNumber, int typeID, String timeStamp) {
+        Connection conn = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_DONATE_ASSET);
+            stm.setString(1, assetYear);
+            stm.setInt(2, assetGet);
+            stm.setString(3, assetNumber);
+            stm.setInt(4, typeID);
+            stm.executeUpdate();
+            stm = conn.prepareStatement(SQL_DONATE_INSERT);
+            stm.setString(1, timeStamp);
+            stm.setString(2, assetYear);
+            stm.setInt(3, assetGet);
+            stm.setString(4, assetNumber);
+            stm.setInt(5, typeID);
             stm.executeUpdate();
             result = true;
         } catch (SQLException ex) {
