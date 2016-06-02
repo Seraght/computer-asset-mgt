@@ -25,8 +25,8 @@
                                     <th>ยี่ห้อ</th>
                                     <th>รุ่น</th>
                                     <th>ชนิด</th>
-                                    <th>ลบ</th>
-                                    <th>แก้ไข</th>
+                                    <th>สถานะ</th>
+                                    <th>กู้คืน</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,8 +45,8 @@
                                         <td>${c.spec["brand"]}</td>
                                         <td>${c.spec["model"]}</td>
                                         <td>${c.typeName}</td> 
-                                        <td><a href="/cam/removeasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}" data-confirm="คุณยืนยันที่จะลบครุภัณฑ์หรือไม่ (ครุภัณฑ์ที่ถูกลบ จะย้ายไปอยู่ในหัวข้อ 'ครุภัณฑ์ที่ถูกลบ')"><span class="glyphicon glyphicon-trash"></span></a></td>
-                                        <td><a href="/cam/editasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td>${c.assetStatus}</td>
+                                        <td><a href="/cam/restoreasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                                     </tr>
                                 </c:forEach>
                             </tbody>

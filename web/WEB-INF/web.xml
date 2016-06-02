@@ -153,6 +153,18 @@
         <servlet-name>DeleteAsset</servlet-name>
         <servlet-class>com.asset.servlet.DeleteAsset</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RestoreAsset</servlet-name>
+        <servlet-class>com.asset.servlet.RestoreAsset</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewDonate</servlet-name>
+        <servlet-class>com.asset.servlet.ViewDonate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DonateAsset</servlet-name>
+        <servlet-class>com.asset.servlet.DonateAsset</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CreateAsset</servlet-name>
         <url-pattern>/addasset</url-pattern>
@@ -268,6 +280,18 @@
     <servlet-mapping>
         <servlet-name>DeleteAsset</servlet-name>
         <url-pattern>/viewdeleteasset</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RestoreAsset</servlet-name>
+        <url-pattern>/restoreasset</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewDonate</servlet-name>
+        <url-pattern>/viewdonateasset</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DonateAsset</servlet-name>
+        <url-pattern>/donateasset</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

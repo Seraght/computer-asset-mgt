@@ -21,6 +21,7 @@
                         <jsp:useBean id="now" class="java.util.Date" />
                         <fmt:formatDate var="year" value="${now}" pattern="yyyy" />
                         <select class="form-control" name="assetYear">
+                            <option value=""></option>
                             <c:forEach var="i" begin="0" end="10" >
                                 <option value=" ${year+543-i}"> ${year+543-i}</option>
                             </c:forEach>
@@ -30,6 +31,7 @@
                     <div class="col-sm-2">
 
                         <select class="form-control" name="assetGet">
+                            <option value="0"></option>
                             <c:forEach items="${get}" var="g" varStatus="vs" >
                                 <option value="${g.assetGetID}">${g.assetGet}</option>
                             </c:forEach>
@@ -38,6 +40,7 @@
                     <label for="inputTypeID" class="col-sm-2 control-label">ประเภทครุภัณฑ์</label>
                     <div class="col-sm-3">
                         <select class="form-control" name="typeID">
+                            <option value="0"></option>
                             <c:forEach items="${properties}" var="p" varStatus="vs" >
                                 <option value="${p.assetTypeID}">${p.assetType}</option>
                             </c:forEach>
@@ -51,7 +54,12 @@
                     </div>
                     <label for="inputBrand" class="col-sm-2 control-label">ยี่ห้อ</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="brand" placeholder="Dell" name="brand">
+                        <select class="form-control" name="brand">
+                            <option value=""></option>
+                            <c:forEach items="${brand}" var="b" varStatus="vs" >
+                                <option value="${b.assetBrand}">${b.assetBrand}</option>
+                            </c:forEach>
+                        </select>
                     </div>
 
                 </div>
