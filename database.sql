@@ -49,7 +49,7 @@ CREATE TABLE `asset` (
 
 LOCK TABLES `asset` WRITE;
 /*!40000 ALTER TABLE `asset` DISABLE KEYS */;
-INSERT INTO `asset` VALUES ('57',1,'001',1,'6CL5F02','Optiplex 7010DT','DELL',20000,'Test','Delete','2015-01-01'),('57',1,'002',1,'C8L1F02','Optiplex 7010DT','DELL',20000,'test','Delete','2015-01-01'),('57',1,'003',1,'JGK3F02','Optiplex 7010DT','DELL',20000,NULL,'Delete','2015-01-01'),('57',1,'004',1,'B6L2F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01'),('57',1,'005',1,'88L1F02','Optiplex 7010DT','DELL',20000,'asdsad','Stock','2015-01-01'),('57',1,'006',1,'9FG8F02','Optiplex 7010DT','DELL',20000,'','Stock','2015-01-01'),('57',1,'007',1,'F1N2F02','Optiplex 7010DT','DELL',20000,'แค่ทดสอบดูเฉยๆ','Stock','2015-01-01');
+INSERT INTO `asset` VALUES ('51',1,'001',1,'L3D4713 ','Thinkcentre','Lenovo',20000,'','Donate','2008-01-01'),('51',1,'002',1,'L3D4655 ','Thinkcentre','Lenovo',20000,'','Donate','2008-01-01'),('52',1,'001',1,'92M212S ','Optiplex 760','DELL',40000,'','Donate','2009-01-01'),('52',1,'002',1,'13M212S ','Optiplex 760','DELL',40000,'','Donate','2009-01-01'),('57',1,'001',1,'6CL5F02','Optiplex 7010DT','DELL',20000,'Test','Stock','2015-01-01'),('57',1,'001',2,'615997-01R4200444','LH532V','FUJITSU',20000,'','Stock','2015-01-01'),('57',1,'001',4,'WCU012667','CP305d LED','DocuPrint',20000,'','Stock','2015-01-01'),('57',1,'001',5,'A33A016768','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'002',1,'C8L1F02','Optiplex 7010DT','DELL',20000,'test','Stock','2015-01-01'),('57',1,'002',2,'615997-01R4200443','LH532V','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'002',4,'WCU012668','CP305d LED','DocuPrint',20000,'','Stock','2015-01-01'),('57',1,'002',5,'A33A016878','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'003',1,'JGK3F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01'),('57',1,'003',4,'WCU012564','CP305d LED','DocuPrint',2000,'','Stock','2015-01-01'),('57',1,'003',5,'A33A016034','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'004',1,'B6L2F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01'),('57',1,'005',1,'88L1F02','Optiplex 7010DT','DELL',20000,'asdsad','Stock','2015-01-01'),('57',1,'006',1,'9FG8F02','Optiplex 7010DT','DELL',20000,'','Stock','2015-01-01'),('57',1,'007',1,'F1N2F02','Optiplex 7010DT','DELL',20000,'แค่ทดสอบดูเฉยๆ','Stock','2015-01-01');
 /*!40000 ALTER TABLE `asset` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,7 +71,7 @@ CREATE TABLE `asset_donate` (
   PRIMARY KEY (`donate_id`),
   KEY `asset_pk` (`asset_year`,`asset_get`,`asset_number`,`asset_type`),
   CONSTRAINT `asset_pk` FOREIGN KEY (`asset_year`, `asset_get`, `asset_number`, `asset_type`) REFERENCES `asset` (`asset_year`, `asset_get`, `asset_number`, `type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,6 +80,7 @@ CREATE TABLE `asset_donate` (
 
 LOCK TABLES `asset_donate` WRITE;
 /*!40000 ALTER TABLE `asset_donate` DISABLE KEYS */;
+INSERT INTO `asset_donate` VALUES (1,'2016-06-02',NULL,'51',1,'001',1),(2,'2016-06-02',NULL,'51',1,'002',1),(3,'2016-06-02',NULL,'52',1,'001',1),(5,'2016-05-03',NULL,'52',1,'002',1);
 /*!40000 ALTER TABLE `asset_donate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +144,7 @@ CREATE TABLE `brand` (
   `brand_id` int(11) NOT NULL AUTO_INCREMENT,
   `brand_name` varchar(45) NOT NULL,
   PRIMARY KEY (`brand_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +153,7 @@ CREATE TABLE `brand` (
 
 LOCK TABLES `brand` WRITE;
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
-INSERT INTO `brand` VALUES (1,'DELL'),(2,'FUJITSU'),(3,'CISCO'),(4,'HP');
+INSERT INTO `brand` VALUES (1,'DELL'),(2,'FUJITSU'),(3,'CISCO'),(4,'HP'),(5,'DocuPrint'),(6,'Lenovo');
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,4 +313,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-30 21:20:33
+-- Dump completed on 2016-06-03 21:43:03
