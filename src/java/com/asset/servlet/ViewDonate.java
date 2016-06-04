@@ -7,9 +7,8 @@ package com.asset.servlet;
 
 import com.asset.model.Asset;
 import com.asset.model.Computer;
+import com.asset.model.Donate;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -38,29 +37,45 @@ public class ViewDonate extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String message = "";
         String target = null;
-        
+
         int count = 0;
-        
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.YEAR, -5);
-        
-        String year = Integer.toString(now.get(Calendar.YEAR));
-        
-        List<Computer> c = Asset.searchByDate(year);
-        
-        if (c != null) {
-            for (int i = 1;i <= c.size();i++) {
-                count++;
+        String status = request.getParameter("assetStatus");
+
+        if (status.equals("Stock")) {
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.YEAR, -5);
+
+            String year = Integer.toString(now.get(Calendar.YEAR));
+            List<Computer> c = null;
+            c = Asset.searchByDate(year, status);
+
+            if (c != null) {
+                for (int i = 1; i <= c.size(); i++) {
+                    count++;
+                }
+                message = "พบครุภัณฑ์จำนวนทั้งสิ้น " + count + " รายการ";
+                request.setAttribute("computers", c);
+            } else {
+                message = "ไม่พบรายการครุภัณฑ์ที่ค้นหา";
             }
-            message = "พบครุภัณฑ์ที่ถูกลบจำนวนทั้งสิ้น " + count + " รายการ";
-            request.setAttribute("computers", c);
         } else {
-            message = "ไม่พบรายการครุภัณฑ์ที่ค้นหา";
+            List<Donate> d = Donate.searchAllDonate();
+            
+            if (d != null) {
+                for (int i = 1; i <= d.size(); i++) {
+                    count++;
+                }
+                message = "พบครุภัณฑ์จำนวนทั้งสิ้น " + count + " รายการ";
+                request.setAttribute("computers", d);
+            } else {
+                message = "ไม่พบรายการครุภัณฑ์ที่ค้นหา";
+            }
         }
+
         target = "/back/search_donate_asset.jsp";
         request.setAttribute("message", message);
         getServletContext().getRequestDispatcher(target).forward(request, response);
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

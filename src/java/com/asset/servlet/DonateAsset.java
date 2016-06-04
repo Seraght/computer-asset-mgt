@@ -50,10 +50,10 @@ public class DonateAsset extends HttpServlet {
             Asset a = new Asset();
             Boolean result = a.donateComputer(assetYear, assetGet, assetNumber, typeID,donateTime);
             if (result != false) {
-                message += "ทำการบริจาคครุภัณฑ์หมายเลข " + assetYear + "-" + assetGet + "-" + assetNumber + "-" + typeID + " เรียบร้อยแล้ว\n";
+                message += "ทำการบริจาคครุภัณฑ์หมายเลข " + assetYear + "-" + assetGet + "-" + assetNumber + "-" + typeID + " เรียบร้อยแล้ว<br>";
 
             } else {
-                message += "การบริจาคครุภัณฑ์หมายเลข " + assetYear + "-" + assetGet + "-" + assetNumber + "-" + typeID + " ผิดพลาด\n";
+                message += "การบริจาคครุภัณฑ์หมายเลข " + assetYear + "-" + assetGet + "-" + assetNumber + "-" + typeID + " ผิดพลาด<br>";
             }
             index++;
         }

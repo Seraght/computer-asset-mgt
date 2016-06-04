@@ -26,6 +26,7 @@ public class Computer {
     private String assetStatus;
     private String typeName;
     private String assetBuyDate;
+    private String donateDate;
 
     public Computer(String assetYear, int assetGet, String assetNumber, int typeID, String serial, double price, ComputerSpec spec, String assetBuyDate) {
         this.assetYear = assetYear;
@@ -146,5 +147,15 @@ public class Computer {
     public void setAssetBuyDate(String assetBuyDate) {
         this.assetBuyDate = assetBuyDate;
     }
+
+    public String getDonateDate() {
+        return donateDate;
+    }
+
+    public void setDonateDate(String donateDate) {
+        this.donateDate = donateDate;
+    }
+    
+    
 
 }

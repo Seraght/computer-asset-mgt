@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: asset
+-- Host: 127.0.0.1    Database: asset
 -- ------------------------------------------------------
 -- Server version	5.7.12-log
 
@@ -71,7 +71,7 @@ CREATE TABLE `asset_donate` (
   PRIMARY KEY (`donate_id`),
   KEY `asset_pk` (`asset_year`,`asset_get`,`asset_number`,`asset_type`),
   CONSTRAINT `asset_pk` FOREIGN KEY (`asset_year`, `asset_get`, `asset_number`, `asset_type`) REFERENCES `asset` (`asset_year`, `asset_get`, `asset_number`, `type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +80,7 @@ CREATE TABLE `asset_donate` (
 
 LOCK TABLES `asset_donate` WRITE;
 /*!40000 ALTER TABLE `asset_donate` DISABLE KEYS */;
-INSERT INTO `asset_donate` VALUES (1,'2016-06-02',NULL,'51',1,'001',1),(2,'2016-06-02',NULL,'51',1,'002',1),(3,'2016-06-02',NULL,'52',1,'001',1),(5,'2016-05-03',NULL,'52',1,'002',1);
+INSERT INTO `asset_donate` VALUES (1,'2016-06-02',NULL,'51',1,'001',1),(2,'2016-06-02',NULL,'51',1,'002',1),(3,'2016-06-02',NULL,'52',1,'001',1);
 /*!40000 ALTER TABLE `asset_donate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -313,4 +313,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-03 21:43:03
+-- Dump completed on 2016-06-04 16:51:11
