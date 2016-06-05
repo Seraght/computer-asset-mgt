@@ -34,6 +34,7 @@ CREATE TABLE `asset` (
   `description` varchar(45) DEFAULT NULL,
   `asset_status` varchar(30) NOT NULL DEFAULT 'Stock',
   `buy_date` date DEFAULT NULL,
+  `has_owner` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`asset_year`,`asset_get`,`asset_number`,`type_id`),
   UNIQUE KEY `serial_UNIQUE` (`serial`),
   KEY `asset_get_idx` (`asset_get`),
@@ -49,7 +50,7 @@ CREATE TABLE `asset` (
 
 LOCK TABLES `asset` WRITE;
 /*!40000 ALTER TABLE `asset` DISABLE KEYS */;
-INSERT INTO `asset` VALUES ('51',1,'001',1,'L3D4713 ','Thinkcentre','Lenovo',20000,'','Donate','2008-01-01'),('51',1,'002',1,'L3D4655 ','Thinkcentre','Lenovo',20000,'','Donate','2008-01-01'),('52',1,'001',1,'92M212S ','Optiplex 760','DELL',40000,'','Donate','2009-01-01'),('52',1,'002',1,'13M212S ','Optiplex 760','DELL',40000,'','Donate','2009-01-01'),('57',1,'001',1,'6CL5F02','Optiplex 7010DT','DELL',20000,'Test','Stock','2015-01-01'),('57',1,'001',2,'615997-01R4200444','LH532V','FUJITSU',20000,'','Stock','2015-01-01'),('57',1,'001',4,'WCU012667','CP305d LED','DocuPrint',20000,'','Stock','2015-01-01'),('57',1,'001',5,'A33A016768','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'002',1,'C8L1F02','Optiplex 7010DT','DELL',20000,'test','Stock','2015-01-01'),('57',1,'002',2,'615997-01R4200443','LH532V','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'002',4,'WCU012668','CP305d LED','DocuPrint',20000,'','Stock','2015-01-01'),('57',1,'002',5,'A33A016878','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'003',1,'JGK3F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01'),('57',1,'003',4,'WCU012564','CP305d LED','DocuPrint',2000,'','Stock','2015-01-01'),('57',1,'003',5,'A33A016034','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01'),('57',1,'004',1,'B6L2F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01'),('57',1,'005',1,'88L1F02','Optiplex 7010DT','DELL',20000,'asdsad','Stock','2015-01-01'),('57',1,'006',1,'9FG8F02','Optiplex 7010DT','DELL',20000,'','Stock','2015-01-01'),('57',1,'007',1,'F1N2F02','Optiplex 7010DT','DELL',20000,'แค่ทดสอบดูเฉยๆ','Stock','2015-01-01');
+INSERT INTO `asset` VALUES ('51',1,'001',1,'L3D4713 ','Thinkcentre','Lenovo',20000,'','Donate','2008-01-01',0),('51',1,'002',1,'L3D4655 ','Thinkcentre','Lenovo',20000,'','Donate','2008-01-01',0),('52',1,'001',1,'92M212S ','Optiplex 760','DELL',40000,'','Donate','2009-01-01',0),('52',1,'002',1,'13M212S ','Optiplex 760','DELL',40000,'','Donate','2009-01-01',0),('57',1,'001',1,'6CL5F02','Optiplex 7010DT','DELL',20000,'Test','Stock','2015-01-01',0),('57',1,'001',2,'615997-01R4200444','LH532V','FUJITSU',20000,'','Stock','2015-01-01',0),('57',1,'001',4,'WCU012667','CP305d LED','DocuPrint',20000,'','Stock','2015-01-01',0),('57',1,'001',5,'A33A016768','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01',0),('57',1,'002',1,'C8L1F02','Optiplex 7010DT','DELL',20000,'test','Stock','2015-01-01',0),('57',1,'002',2,'615997-01R4200443','LH532V','FUJITSU',2000,'','Stock','2015-01-01',0),('57',1,'002',4,'WCU012668','CP305d LED','DocuPrint',20000,'','Stock','2015-01-01',0),('57',1,'002',5,'A33A016878','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01',0),('57',1,'003',1,'JGK3F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01',0),('57',1,'003',4,'WCU012564','CP305d LED','DocuPrint',2000,'','Stock','2015-01-01',0),('57',1,'003',5,'A33A016034','Image Scanner FI-7160','FUJITSU',2000,'','Stock','2015-01-01',0),('57',1,'004',1,'B6L2F02','Optiplex 7010DT','DELL',20000,NULL,'Stock','2015-01-01',0),('57',1,'005',1,'88L1F02','Optiplex 7010DT','DELL',20000,'asdsad','Stock','2015-01-01',0),('57',1,'006',1,'9FG8F02','Optiplex 7010DT','DELL',20000,'','Stock','2015-01-01',0),('57',1,'007',1,'F1N2F02','Optiplex 7010DT','DELL',20000,'แค่ทดสอบดูเฉยๆ','Stock','2015-01-01',0);
 /*!40000 ALTER TABLE `asset` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,17 +167,20 @@ DROP TABLE IF EXISTS `deliver_asset`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `deliver_asset` (
   `deliver_id` int(11) NOT NULL AUTO_INCREMENT,
-  `deliver_status` varchar(20) NOT NULL DEFAULT 'WAITING',
+  `deliver_status` varchar(20) NOT NULL,
   `deliver_date` datetime NOT NULL,
   `accept_date` datetime DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `computer_id` int(11) DEFAULT NULL,
+  `person_id` int(11) NOT NULL,
+  `asset_year` char(2) NOT NULL,
+  `asset_get` int(11) NOT NULL,
+  `asset_number` char(3) NOT NULL,
+  `asset_type` int(11) NOT NULL,
   PRIMARY KEY (`deliver_id`),
-  UNIQUE KEY `person_id_UNIQUE` (`person_id`),
-  KEY `person_id_idx` (`person_id`),
-  KEY `computer_id_idx` (`computer_id`),
-  CONSTRAINT `person_id` FOREIGN KEY (`person_id`) REFERENCES `person` (`person_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+  KEY `person_key_idx` (`person_id`),
+  KEY `asset_key` (`asset_year`,`asset_get`,`asset_number`,`asset_type`),
+  CONSTRAINT `asset_key` FOREIGN KEY (`asset_year`, `asset_get`, `asset_number`, `asset_type`) REFERENCES `asset` (`asset_year`, `asset_get`, `asset_number`, `type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `person_key` FOREIGN KEY (`person_id`) REFERENCES `person` (`person_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,10 +207,9 @@ CREATE TABLE `person` (
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `role_id` int(11) DEFAULT NULL,
-  `has_asset` binary(1) DEFAULT '0',
+  `has_asset` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`person_id`),
   KEY `role_id_idx` (`role_id`),
-  KEY `deliver_id_idx` (`has_asset`),
   CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `person_role` (`role_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -217,7 +220,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (10,'8375','อำนาจ','จุลชาต','amnat','amnat',1,'1'),(11,'6132','ณิษาอร','มานะ','nisaon','nisaon',1,'1'),(12,'1','Admin','system','admin','admin',2,'0'),(13,'8415','ณัฐพงษ์','จัตุรเขษม','nuttapong','nuttapong',1,'1'),(14,'8170','ธันว์','ตังสุรัตน์','thun','thun',1,'1'),(15,'8357','สุรเชษฐ','สุวรรณไพบูลย์','surachet','surachet',1,'0'),(16,'8228','พงค์พัฒน์','ศรีทิพงศ์','pongpat','pongpat',1,'0'),(17,'8413','เฉลิมชัย','เพาะบุญ','chalermchai','chalermchai',1,'1'),(18,'8367','อานนท์','สานะ','arnon','arnon',1,'1'),(19,'8425','วรรณวิทย์','คล้ายบุญส่ง','wannawit','wannawit',1,'0'),(20,'8243','พิมลดา','อู่อ้น','pimlada','pimlada',1,'0'),(21,'8190','ปนัดดา','ชวจุมพล','panadda','panadda',1,'0'),(22,'6174','วัชรพงษ์','ไชยมงคล','watcharapong','watcharapong',1,'0'),(23,'8228','พงค์พัฒน์','ศรีทิพงศ์','pongpat','pongpat',1,'0'),(24,'8413','เฉลิมชัย','เพาะบุญ','chalermchai','chalermchai',1,'0'),(25,'8367','อานนท์','สานะ','arnon','arnon',1,'0'),(26,'8425','วรรณวิทย์','คล้ายบุญส่ง','wannawit','wannawit',1,'0'),(27,'8243','พิมลดา','อู่อ้น','pimlada','pimlada',1,'0'),(28,'8190','ปนัดดา','ชวจุมพล','panadda','panadda',1,'0');
+INSERT INTO `person` VALUES (10,'8375','อำนาจ','จุลชาต','amnat','amnat',1,0),(11,'6132','ณิษาอร','มานะ','nisaon','nisaon',1,0),(12,'1','Admin','system','admin','admin',2,0),(13,'8415','ณัฐพงษ์','จัตุรเขษม','nuttapong','nuttapong',1,0),(14,'8170','ธันว์','ตังสุรัตน์','thun','thun',1,0),(15,'8357','สุรเชษฐ','สุวรรณไพบูลย์','surachet','surachet',1,0),(16,'8228','พงค์พัฒน์','ศรีทิพงศ์','pongpat','pongpat',1,0),(17,'8413','เฉลิมชัย','เพาะบุญ','chalermchai','chalermchai',1,0),(18,'8367','อานนท์','สานะ','arnon','arnon',1,0),(19,'8425','วรรณวิทย์','คล้ายบุญส่ง','wannawit','wannawit',1,0),(20,'8243','พิมลดา','อู่อ้น','pimlada','pimlada',1,0),(21,'8190','ปนัดดา','ชวจุมพล','panadda','panadda',1,0),(22,'6174','วัชรพงษ์','ไชยมงคล','watcharapong','watcharapong',1,0),(23,'8228','พงค์พัฒน์','ศรีทิพงศ์','pongpat','pongpat',1,0),(24,'8413','เฉลิมชัย','เพาะบุญ','chalermchai','chalermchai',1,0),(25,'8367','อานนท์','สานะ','arnon','arnon',1,0),(26,'8425','วรรณวิทย์','คล้ายบุญส่ง','wannawit','wannawit',1,0),(27,'8243','พิมลดา','อู่อ้น','pimlada','pimlada',1,0),(28,'8190','ปนัดดา','ชวจุมพล','panadda','panadda',1,0);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -313,4 +316,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-04 16:51:11
+-- Dump completed on 2016-06-05 10:07:19
