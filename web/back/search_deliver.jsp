@@ -33,9 +33,9 @@
                     <label for="statusAsset" class="col-sm-2 control-label">ต้นหาจากครุภัณฑ์คอมพิวเตอร์</label>
                     <div class="col-sm-4">
                         <select class="form-control" name="statusAsset">
-                            <option value="2">ทั้งหมด</option>
-                            <option value="0">ยังไม่มีผู้ครองครอง</option>
-                            <option value="1">มีผู้ครอบครอง</option>
+                            <option value="0">ทั้งหมด</option>
+                            <option value="Stock">ยังไม่มีผู้ครองครอง</option>
+                            <option value="Deliver">มีผู้ครอบครอง</option>
                         </select>
                     </div>
                     <div class="col-sm-offset-2 col-sm-4">
@@ -70,12 +70,12 @@
                                     </c:choose>
                                     <tr style="background-color: ${bg}">
                                         <td>${vs.count}</td>
-                                        <td>${c.assetNumber}</td>
+                                        <td>${c.assetYear}-${c.assetGet}-${c.assetNumber}-${c.typeID}</td>
                                         <td>${c.spec["brand"]}</td>
                                         <td>${c.spec["model"]}</td>
                                         <c:choose>
                                             <c:when test="${c.hasOwner == 1}">
-                                                <td align="center"><a href="/cam/viewdeliver?assetID=${c.assetID}"><img src="images/detail_icon.png" class="img-responsive"></a></td> 
+                                                <td align="center"><a href="/cam/viewdeliver?${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><img src="images/detail_icon.png" class="img-responsive"></a></td> 
                                                     </c:when>
                                                     <c:otherwise>
                                                 <td></td>
@@ -83,13 +83,12 @@
                                         </c:choose>
                                         <c:choose>
                                             <c:when test="${c.hasOwner == 0}">
-                                                <td align="center"><a href="/cam/matchdeliver?assetID=${c.assetID}&assetNumber=${c.assetNumber}"><img src="images/edit_icon_mini.png" class="img-responsive"></a></td> 
+                                                <td align="center"><a href="/cam/matchdeliver?${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><img src="images/edit_icon_mini.png" class="img-responsive"></a></td> 
                                                     </c:when>
                                                     <c:otherwise>
                                                 <td></td>
                                             </c:otherwise>
                                         </c:choose>
-
                                     </tr>
                                 </c:forEach>
                             </tbody>

@@ -35,11 +35,11 @@
                     <label for="assetList" class="col-sm-6 control-label col-sm-offset-2">หมายเลขครุภัณฑ์</label>
                     <div class="col-sm-8 col-sm-offset-2">
                         <select class="form-control" name="assetID">
-                            <option value="${assetID}">${assetNumber}</option>
+                            <option value="${assetID}">${assetYear}-${assetGet}-${assetNumber}-${typeID}</option>
                             <c:choose>
                                 <c:when test="${listComputers!=null}">
                                     <c:forEach items="${listComputers}" var="lc" >
-                                        <option value="${lc.assetID}">${lc.assetNumber}</option>
+                                        <option value="${lc.assetID}">${lc.assetYear}-${lc.assetGet}-${lc.assetNumber}-${lc.typeID}</option>
                                     </c:forEach>
                                 </c:when>
                             </c:choose>
