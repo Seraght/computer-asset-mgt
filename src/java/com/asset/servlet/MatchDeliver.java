@@ -9,7 +9,6 @@ import com.asset.model.Asset;
 import com.asset.model.Computer;
 import com.asset.model.Person;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,16 +27,22 @@ public class MatchDeliver extends HttpServlet {
         String message = "";
         String target = null;
         
+        List<Person> persons = null;
+        List<Computer> computers = null;
+        
         if (request.getParameter("personID") != null) {
             request.setAttribute("personID", request.getParameter("personID"));
             String name = request.getParameter("Firstname")+" "+request.getParameter("Lastname");
             request.setAttribute("personName", name);
         } else if (request.getParameter("assetID") != null) {
             request.setAttribute("assetID", request.getParameter("assetID"));
+            request.setAttribute("assetGet", request.getParameter("assetGet"));
+            request.setAttribute("typeID", request.getParameter("typeID"));
             request.setAttribute("assetNumber", request.getParameter("assetNumber"));
         }
-        List<Person> persons = Person.searchAllPerson();
-        List<Computer> computers = Asset.searchAllComputer();
+        
+        persons = Person.searchAllPerson();
+        computers = Asset.searchAllComputer();
         request.setAttribute("listPersons", persons);
         request.setAttribute("listComputers", computers);
         

@@ -31,8 +31,8 @@ public class Person {
             + "PERSON_ID = ?";
     private static final String SQL_SEARCH_AUTHEN = "SELECT * FROM PERSON WHERE "
             + "USERNAME = ? AND PASSWORD = ?";
-    private static final String SQL_SEARCH_BY_STATUS = "SELECT * FROM person WHERE "
-            + "has_asset like ? and role_id = 1";
+    private static final String SQL_SEARCH_BY_ROLE = "select * from person "
+            + "where role_id = 1 ";
     private static final String SQL_SEARCH_ALL = "SELECT * FROM PERSON where has_asset = 0 and role_id = 1";
     private static final String SQL_UPDATE_ASSET = "update person set "
             + "has_asset=? where person_id=?";
@@ -176,12 +176,13 @@ public class Person {
         List<Person> matchingPersons = null;
         try {
             conn = ConnectionBuilder.getConnection();
-            stm = conn.prepareStatement(SQL_SEARCH_BY_STATUS);
-            if (search == 1 || search == 0) {
-                stm.setInt(1, search);
-            } else {
-                stm.setString(1, "%");
+            String statement = SQL_SEARCH_BY_ROLE;
+            if (search == 0) {
+                statement += "and person.person_id not in (select person_id from deliver_asset da)";
+            } else if (search == 1){
+                statement += "and person.person_id in (select person_id from deliver_asset da)";
             }
+            stm = conn.prepareStatement(statement);
             rs = stm.executeQuery();
             while (rs.next()) {
                 if (matchingPersons == null) {

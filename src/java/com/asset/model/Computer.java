@@ -27,6 +27,7 @@ public class Computer {
     private String typeName;
     private String assetBuyDate;
     private String donateDate;
+    private int hasOwner;
 
     public Computer(String assetYear, int assetGet, String assetNumber, int typeID, String serial, double price, ComputerSpec spec, String assetBuyDate) {
         this.assetYear = assetYear;
@@ -66,6 +67,7 @@ public class Computer {
         this.assetStatus = rs.getString("asset_status");
         this.typeName = rs.getString("type_name");
         this.assetBuyDate = rs.getString("buy_date");
+        this.hasOwner = rs.getInt("has_owner");
     }
 
     public String getSerial() {
@@ -154,6 +156,14 @@ public class Computer {
 
     public void setDonateDate(String donateDate) {
         this.donateDate = donateDate;
+    }
+
+    public int getHasOwner() {
+        return hasOwner;
+    }
+
+    public void setHasOwner(int hasOwner) {
+        this.hasOwner = hasOwner;
     }
     
     

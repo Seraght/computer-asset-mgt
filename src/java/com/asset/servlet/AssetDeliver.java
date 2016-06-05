@@ -7,14 +7,8 @@ package com.asset.servlet;
 
 import com.asset.model.Asset;
 import com.asset.model.Computer;
-import com.asset.model.ComputerSpec;
-import com.asset.model.DeliverAsset;
-import com.asset.model.Person;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +36,7 @@ public class AssetDeliver extends HttpServlet {
         String target = null;
         int count = 0;
 
-        int assetStatus;
-
-        assetStatus = Integer.parseInt(request.getParameter("statusAsset"));
+        String assetStatus = request.getParameter("statusAsset");
         List<Computer> computers = Asset.searchByStatus(assetStatus);
         if (computers != null) {
             for (int i = 1; i <= computers.size(); i++) {

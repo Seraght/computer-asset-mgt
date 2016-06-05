@@ -37,7 +37,7 @@ public class Asset {
     private static final String SQL_SEARCH_BY_ID = "SELECT * FROM asset a left join asset_type t on a.type_id = t.type_id WHERE "
             + "a.asset_year = ? and a.asset_get = ? and a.asset_number = ? and a.type_id = ?";
     private static final String SQL_SEARCH_BY_STATUS = "SELECT * FROM asset a left join asset_type t on a.type_id = t.type_id WHERE "
-            + "a.asset_status = ?";
+            + "a.asset_status like ? and a.asset_status <> 'Donate' order by a.type_id, a.type_id, a.asset_get,a.asset_number";
     private static final String SQL_SEARCH_BY_DATE = "SELECT * FROM asset a ,asset_type t  WHERE a.type_id = t.type_id and "
             + "a.buy_date < ? ";
     private static final String SQL_SEARCH_ALL = "SELECT * FROM asset where has_owner = 0";
@@ -178,7 +178,7 @@ public class Asset {
             stm.setInt(2, assetGet);
             stm.setString(3, assetNumber);
             stm.setInt(4, typeID);
-            
+
             rs = stm.executeQuery();
             if (rs.next()) {
                 matchingComputer = new Computer(rs);
@@ -226,7 +226,7 @@ public class Asset {
                 addStagement += " and a.serial like '%" + computer.getSerial() + "%'";
             }
             addStagement += " order by a.type_id,a.asset_year,a.asset_get,a.asset_number";
-            
+
             stm = conn.prepareStatement(addStagement);
             rs = stm.executeQuery();
             while (rs.next()) {
@@ -263,7 +263,11 @@ public class Asset {
         try {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_SEARCH_BY_STATUS);
-            stm.setString(1, status);
+            if (status.equals("0")) {
+                stm.setString(1, "%");
+            } else {
+                stm.setString(1, status);
+            }
             rs = stm.executeQuery();
             while (rs.next()) {
                 if (matchingComputers == null) {
@@ -289,7 +293,7 @@ public class Asset {
         }
         return matchingComputers;
     }
-    
+
     public static List<Computer> searchByDate(String date, String status) {
         Connection conn = null;
         PreparedStatement stm = null;
@@ -303,10 +307,10 @@ public class Asset {
             } else {
                 statement += "and asset_status = 'Donate'";
             }
-            
+
             stm = conn.prepareStatement(statement);
-            stm.setString(1, date+ '%');
-            
+            stm.setString(1, date + '%');
+
             rs = stm.executeQuery();
             while (rs.next()) {
                 if (matchingComputers == null) {
@@ -494,7 +498,7 @@ public class Asset {
         }
         return m;
     }
-    
+
     public boolean deleteComputer(String assetYear, int assetGet, String assetNumber, int typeID) {
         Connection conn = null;
         PreparedStatement stm = null;
@@ -522,7 +526,7 @@ public class Asset {
         }
         return result;
     }
-    
+
     public boolean restoreComputer(String assetYear, int assetGet, String assetNumber, int typeID) {
         Connection conn = null;
         PreparedStatement stm = null;
@@ -550,7 +554,7 @@ public class Asset {
         }
         return result;
     }
-    
+
     public boolean donateComputer(String assetYear, int assetGet, String assetNumber, int typeID, String timeStamp) {
         Connection conn = null;
         PreparedStatement stm = null;
