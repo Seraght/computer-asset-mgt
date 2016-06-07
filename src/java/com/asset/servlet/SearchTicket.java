@@ -8,7 +8,6 @@ package com.asset.servlet;
 import com.asset.model.ProblemReport;
 import com.asset.model.Ticket;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

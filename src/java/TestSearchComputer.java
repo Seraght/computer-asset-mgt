@@ -24,14 +24,12 @@ import java.util.Map;
 public class TestSearchComputer {
 
     public static void main(String[] args) {
-        String assetNum = "57-1-001-1";
+        String assetKey = "57-1-001-1";
         
-        String assetYear = assetNum.substring(0, 2);
-//        String assetGet = assetNum.substring(3, 4);
-        int assetGet = Integer.parseInt(assetNum.substring(3, 4));
-        String assetNumber = assetNum.substring(5, 8);
-//        String typeID = assetNum.substring(9, 10);
-        int typeID = Integer.parseInt(assetNum.substring(9, 10));
+        String assetYear = assetKey.substring(0, 2);
+        int assetGet = Integer.parseInt(assetKey.substring(3, 4));
+        String assetNumber = assetKey.substring(5, 8);
+        int typeID = Integer.parseInt(assetKey.substring(9, 10));
         
         System.out.println(assetYear);
         System.out.println(assetGet);

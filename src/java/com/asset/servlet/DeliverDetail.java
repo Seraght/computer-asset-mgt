@@ -5,12 +5,8 @@
  */
 package com.asset.servlet;
 
-import com.asset.model.Asset;
-import com.asset.model.Computer;
 import com.asset.model.DeliverAsset;
-import com.asset.model.Person;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,31 +36,26 @@ public class DeliverDetail extends HttpServlet {
         if (request.getParameter("personID") != null) {
             int personID = Integer.parseInt(request.getParameter("personID"));
             DeliverAsset da = DeliverAsset.searchByPerson(personID);
-            Person p = Person.searchPerson(da.getPersonID());
-            Computer c = Asset.searchByID(da.getComputerID());
-            if (da == null || p == null || c == null) {
+            if (da == null) {
                 message = "ไม่พบข้อมูลการส่งมอบ";
             } else {
                 request.setAttribute("deliver", da);
-                request.setAttribute("person", p);
-                request.setAttribute("computer", c);
             }
-        } else if (request.getParameter("assetID") != null) {
-            int assetID = Integer.parseInt(request.getParameter("assetID"));
-            DeliverAsset da = DeliverAsset.searchByComputer(assetID);
-            Person p = Person.searchPerson(da.getPersonID());
-            Computer c = Asset.searchByID(da.getComputerID());
-            if (da == null || p == null || c == null) {
+        } else if (request.getParameter("assetYear") != null) {
+            String assetYear = request.getParameter("assetYear");
+            int assetGet = Integer.parseInt(request.getParameter("assetGet"));
+            String assetNumber = request.getParameter("assetNumber");
+            int typeID = Integer.parseInt(request.getParameter("typeID"));
+            DeliverAsset da = DeliverAsset.searchByComputer(assetYear,assetGet,assetNumber,typeID);
+            if (da == null) {
                 message = "ไม่พบข้อมูลการส่งมอบ";
             } else {
                 request.setAttribute("deliver", da);
-                request.setAttribute("person", p);
-                request.setAttribute("computer", c);
             }
         } else {
             message = "ไม่พบข้อมูลการส่งมอบ";
         }
-        
+
         target = "/back/deliver_detail.jsp";
         request.setAttribute("message", message);
         getServletContext().getRequestDispatcher(target).forward(request, response);

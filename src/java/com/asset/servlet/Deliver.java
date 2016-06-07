@@ -6,6 +6,7 @@
 package com.asset.servlet;
 
 import com.asset.model.Asset;
+import com.asset.model.Computer;
 import com.asset.model.DeliverAsset;
 import com.asset.model.Person;
 import java.io.IOException;
@@ -14,9 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class Deliver extends HttpServlet {
-
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -24,22 +23,42 @@ public class Deliver extends HttpServlet {
         String message = "";
         String target = null;
         boolean result = false;
-        
-        int assetID = Integer.parseInt(request.getParameter("assetID"));
+
+        String assetKey = request.getParameter("assetKey");
+
+        String assetYear = assetKey.substring(0, 2);
+        int assetGet = Integer.parseInt(assetKey.substring(3, 4));
+        String assetNumber = assetKey.substring(5, 8);
+        int assetType = Integer.parseInt(assetKey.substring(9, 10));
         int personID = Integer.parseInt(request.getParameter("personID"));
-        
-        DeliverAsset deliver = new DeliverAsset(personID, assetID);
-        result = deliver.insertDeliverAsset(deliver);
-        if (result != false) {
-            message = "ได้ส่งมอบครุภัณฑ์หมายเลข " + assetID + " ให้กับ " + personID + "เรียบร้อยแล้ว";
-            Asset a = new Asset();
-            Boolean ra = a.updateOwner(1, assetID);
-            Person p = new Person();
-            Boolean rp = p.updateAsset(1, personID);
+
+        DeliverAsset newDeliver = new DeliverAsset(personID, assetYear, assetGet, assetNumber, assetType);
+
+        DeliverAsset oldDeliver = DeliverAsset.searchByPerson(personID);
+
+        if (oldDeliver != null) {
+            request.setAttribute("newDeliver", newDeliver);
+            request.setAttribute("oldDeliver", oldDeliver);
+            Computer nc = Asset.searchByID(assetYear, assetGet, assetNumber, assetType);
+            request.setAttribute("newComputer", nc);
+            message = "คุณต้องการทดแทนครุภัณฑ์หมายเลข "+assetYear + "-" + assetGet + "-" + assetNumber + "-" + assetType
+                    + " ด้วยครุภัณฑ์หมายเลข " + oldDeliver.getC().getAssetYear()+ "-" + oldDeliver.getC().getAssetGet()+ "-" + oldDeliver.getC().getAssetNumber()+ "-" + oldDeliver.getC().getTypeID()
+                    + " ให้กับเจ้าหน้าที่ " + oldDeliver.getP().getFirstName() + " " + oldDeliver.getP().getLastName() + 
+                    " หรือไม่";
+            target = "/back/deliver_replace.jsp";
         } else {
-            message = "การส่งมอบครุภัณฑ์หมายเลข " + assetID + " ไม่สำเร็จ";
+            result = newDeliver.insertDeliverAsset(newDeliver);
+            if (result != false) {
+                message = "ได้ส่งมอบครุภัณฑ์หมายเลข " + assetYear + "-" + assetGet + "-" + assetNumber + "-" + assetType + " ให้กับ " + personID + "เรียบร้อยแล้ว";
+                Asset a = new Asset();
+                Boolean ra = a.updateOwner(1, assetYear, assetGet, assetNumber, assetType);
+                Person p = new Person();
+                Boolean rp = p.updateAsset(1, personID);
+            } else {
+                message = "การส่งมอบครุภัณฑ์หมายเลข " + assetYear + "-" + assetGet + "-" + assetNumber + "-" + assetType + " ไม่สำเร็จ";
+            }
+            target = "/back/deliver_result.jsp";
         }
-        target = "/back/deliver_result.jsp";
 
         request.setAttribute("message", message);
         getServletContext().getRequestDispatcher(target).forward(request, response);

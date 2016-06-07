@@ -5,14 +5,9 @@
  */
 package com.asset.servlet;
 
-import com.asset.model.Asset;
-import com.asset.model.Computer;
 import com.asset.model.ProblemReport;
 import com.asset.model.Ticket;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,20 +34,31 @@ public class UpdateTicketAdmin extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String message = "";
         String target = null;
-        
+
         int ticketID = Integer.parseInt(request.getParameter("ticketID"));
         Ticket t = ProblemReport.searchByID(ticketID);
-        t.setTicketStatus(Integer.parseInt(request.getParameter("ticketStatus")));
+        int ticketStatus = Integer.parseInt(request.getParameter("ticketStatus"));
+        t.setTicketStatus(ticketStatus);
         t.setTicketSolveDetail(request.getParameter("ticketSolveDetail"));
-        
-        
+
         ProblemReport pr = new ProblemReport();
-        Boolean result = pr.updateTicketAdmin(t);
-        if (result != false) {
-            message = "การแก้ไขหมายเลข " + ticketID + " ประสบความสำเร็จ";
-        } else {
-            message = "ไม่สามารถแก้ไขหมายเลข " + ticketID + " เข้าสู่ฐานข้อมูลได้";
-        }
+
+        if (ticketStatus == 2 || ticketStatus == 3) {
+            Boolean result = pr.updateTicketOngoingAdmin(t);
+            if (result != false) {
+                message = "การแก้ไขหมายเลข " + ticketID + " ประสบความสำเร็จ";
+            } else {
+                message = "ไม่สามารถแก้ไขหมายเลข " + ticketID + " เข้าสู่ฐานข้อมูลได้";
+            }
+        } else if (ticketStatus == 4) {
+            Boolean result = pr.updateTicketSolveAdmin(t);
+            if (result != false) {
+                message = "การแก้ไขหมายเลข " + ticketID + " ประสบความสำเร็จ";
+            } else {
+                message = "ไม่สามารถแก้ไขหมายเลข " + ticketID + " เข้าสู่ฐานข้อมูลได้";
+            }
+        } 
+
         target = "/back/edit_ticket_result.jsp";
 
         request.setAttribute("message", message);

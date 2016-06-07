@@ -10,12 +10,10 @@ import com.asset.model.Computer;
 import com.asset.model.DeliverAsset;
 import com.asset.model.Person;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,15 +37,10 @@ public class RecieveAsset extends HttpServlet {
         String target = null;
 
         int officerID = ((int) request.getSession(false).getAttribute("officerID"));
-        DeliverAsset da = DeliverAsset.searchByPerson(officerID);
+        DeliverAsset da = DeliverAsset.searchByReceiveStatus(officerID);
 
         if (da != null) {
-
-            Person p = Person.searchPerson(officerID);
-            Computer c = Asset.searchByID(da.getComputerID());
             request.setAttribute("deliver", da);
-            request.setAttribute("computer", c);
-            request.setAttribute("person", p);
         } else {
             message = "ยังไม่มีการส่งมอบครุภัณฑ์";
             request.setAttribute("message", message);

@@ -10,7 +10,6 @@ import com.asset.model.Computer;
 import com.asset.model.ProblemReport;
 import com.asset.model.Ticket;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +41,10 @@ public class UpdateTicket extends HttpServlet {
         Ticket t = ProblemReport.searchByID(ticketID);
         t.setTicketTitle(request.getParameter("ticketTitle"));
         t.setTicketDescription(request.getParameter("ticketDescription"));
-        Computer c = Asset.searchByNumber(request.getParameter("assetNumber"));
-        t.setAssetReportID(c.getAssetID());
+        t.setAssetYear(request.getParameter("assetYear"));
+        t.setAssetGet(Integer.parseInt(request.getParameter("assetGet")));
+        t.setAssetNumber(request.getParameter("assetNumber"));
+        t.setAssetType(Integer.parseInt(request.getParameter("assetType")));
         
         ProblemReport pr = new ProblemReport();
         Boolean result = pr.updateTicket(t);

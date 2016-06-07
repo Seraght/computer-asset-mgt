@@ -5,8 +5,7 @@
  */
 package com.asset.servlet;
 
-import com.asset.model.ProblemReport;
-import com.asset.model.Ticket;
+import com.asset.model.Asset;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,36 +16,31 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Seraght
  */
-public class EditTicket extends HttpServlet {
+public class RemoveAsset extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        
+        String target = "";
         String message = "";
-        String target = null;
         
-        int ticketID = Integer.parseInt(request.getParameter("ticketID"));
-        Ticket searchResult = ProblemReport.searchByID(ticketID);
+        String assetYear = request.getParameter("assetYear");
+        int assetGet = Integer.parseInt(request.getParameter("assetGet"));
+        String assetNumber = request.getParameter("assetNumber");
+        int typeID = Integer.parseInt(request.getParameter("typeID"));
         
+        Asset a = new Asset();
+        Boolean result = a.deleteComputer(assetYear, assetGet, assetNumber, typeID);
         
-        
-        if (searchResult != null) {
-            request.setAttribute("ticket", searchResult);
+         if (result != false) {
+            message = "ทำการลบครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " เรียบร้อยแล้ว";
+            
         } else {
-            message = "ไม่พบรายการปัญหาที่แจ้ง";
+            message = "ไม่สามารถลบครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ได้";
         }
-        target = "/front/edit_ticket.jsp";
+        target = "/back/remove_asset_result.jsp";
+
         request.setAttribute("message", message);
         getServletContext().getRequestDispatcher(target).forward(request, response);
     }

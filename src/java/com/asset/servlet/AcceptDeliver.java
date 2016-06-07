@@ -5,14 +5,8 @@
  */
 package com.asset.servlet;
 
-import com.asset.model.Asset;
-import com.asset.model.Computer;
 import com.asset.model.DeliverAsset;
-import com.asset.model.Person;
-import com.asset.model.ProblemReport;
-import com.asset.model.Ticket;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.servlet.ServletException;

@@ -65,7 +65,7 @@ public class CreateAsset extends HttpServlet {
         }
         
         if (count == 0) {
-            number = "002";
+            number = "001";
         }
 
         double price = Double.parseDouble(request.getParameter("price"));

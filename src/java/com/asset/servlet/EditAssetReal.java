@@ -37,34 +37,35 @@ public class EditAssetReal extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String target = "";
         String message = "";
-        
-        
-        int assetID = Integer.parseInt(request.getParameter("assetID"));
-        Computer editComputer = Asset.searchByID(assetID);
-        
-        editComputer.setAssetNumber(request.getParameter("assetNumber"));
-        double price = Double.parseDouble(request.getParameter("price"));
-        editComputer.setPrice(price);
+        String assetYear = request.getParameter("assetYear");
+        int assetGet = Integer.parseInt(request.getParameter("assetGet"));
+        String assetNumber = request.getParameter("assetNumber");
         int typeID = Integer.parseInt(request.getParameter("typeID"));
-        editComputer.setTypeID(typeID);
+        
+        Computer c = Asset.searchByID(assetYear,assetGet,assetNumber,typeID);
+        
+        int typeIDNew = Integer.parseInt(request.getParameter("typeIDNew"));
+        double price = Double.parseDouble(request.getParameter("price"));
+        c.setPrice(price);
+        c.setTypeID(typeIDNew);
         String serial = request.getParameter("serial");
-        editComputer.setSerial(serial);
+        c.setSerial(serial);
         
         Map properties = new HashMap();
         properties.put("model", request.getParameter("model"));
         properties.put("brand", request.getParameter("brand"));
         properties.put("description", request.getParameter("description"));
         ComputerSpec addSpec = new ComputerSpec(properties);
-        editComputer.setSpec(addSpec);
+        c.setSpec(addSpec);
         
         Asset in = new Asset();
-        Boolean result = in.updateComputer(editComputer);
+        Boolean result = in.updateComputer(c, typeID);
         
         if (result != false) {
-            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetID + " ประสบความสำเร็จ";
+            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ประสบความสำเร็จ";
             
         } else {
-            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetID + " ไม่สำเร็จ";
+            message = "การแก้ไขครุภัณฑ์หมายเลข " + assetYear+"-"+assetGet+"-"+assetNumber+"-"+typeID + " ไม่สำเร็จ";
         }
         target = "/back/edit_asset_result.jsp";
 

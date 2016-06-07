@@ -28,37 +28,75 @@ public class DeliverAsset {
     private String deliverDate;
     private String deliverStatus;
     private String acceptDate;
-    private int personID;
-    private int computerID;
+    private Person p;
+    private Computer c;
+    private ComputerSpec cp;
+
     private static final String SQL_CREATE_DELIVER = "insert into "
             + "deliver_asset(deliver_date, person_id, "
-            + "computer_id) values (?,?,?)";
-    private static final String SQL_UPDATE_STATUS = "update deliver_asset set "
+            + "asset_year,asset_get,asset_number,asset_type) values (?,?,?,?,?,?)";
+    private static final String SQL_UPDATE_DELIVER_STATUS = "update deliver_asset set "
             + "deliver_status=?, accept_date =? where deliver_id=?";
-    private static final String SQL_SEARCH_ASSET_ID = "select * from "
-            + "deliver_asset where deliver_id = ?";
-    private static final String SQL_SEARCH_PERSON_ID = "select * from "
-            + "deliver_asset where person_id = ?";
+    private static final String SQL_UPDATE_STATUS = "update deliver_asset "
+            + "set deliver_status = ? where deliver_id = ?";
+    private static final String SQL_SEARCH_ASSET_ID = "select * from deliver_asset da, "
+            + "person p, asset a where p.person_id = da.person_id and "
+            + "a.asset_year = da.asset_year and a.asset_get = da.asset_get and "
+            + "a.asset_number = da.asset_number and a.type_id = da.asset_type and "
+            + "deliver_status <> 'Cancel' and da.asset_year = ? and da.asset_get = ? "
+            + "and da.asset_number = ? and da.asset_type = ?";
+    private static final String SQL_SEARCH_PERSON_ID = "select * from deliver_asset da, "
+            + "person p, asset a where p.person_id = da.person_id and "
+            + "a.asset_year = da.asset_year and a.asset_get = da.asset_get and "
+            + "a.asset_number = da.asset_number and a.type_id = da.asset_type and "
+            + "deliver_status <> 'Cancel' and da.person_id = ? order by "
+            + "a.type_id, a.type_id, a.asset_get,a.asset_number";
+    private static final String SQL_SEARCH_RECIEVE = "select * from deliver_asset da, "
+            + "person p, asset a where p.person_id = da.person_id and "
+            + "a.asset_year = da.asset_year and a.asset_get = da.asset_get and "
+            + "a.asset_number = da.asset_number and a.type_id = da.asset_type and "
+            + "deliver_status = 'Deliver' and da.person_id = ? order by "
+            + "a.type_id, a.type_id, a.asset_get,a.asset_number";
+    private static final String SQL_SEARCH_BY_FOREIGN_KEY = "select * from "
+            + "deliver_asset where person_id = ? and asset_year = ? and asset_get = ? "
+            + "and asset_number = ? and asset_type = ?";
     private static final String SQL_COUNT_DELIVER = "select * from deliver_asset";
 
     public DeliverAsset() {
 
     }
 
-    public DeliverAsset(int personID, int computerID) {
+    public DeliverAsset(int personID, String assetYear, int assetGet, String assetNumber, int assetType) {
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         this.deliverDate = timeStamp;
-        this.personID = personID;
-        this.computerID = computerID;
+        p = new Person();
+        p.setOfficerID(personID);
+        c = new Computer();
+        c.setAssetYear(assetYear);
+        c.setAssetGet(assetGet);
+        c.setAssetNumber(assetNumber);
+        c.setTypeID(assetType);
     }
 
     public DeliverAsset(ResultSet rs) throws SQLException {
         this.deliverID = rs.getInt("DELIVER_ID");
         this.deliverDate = rs.getString("DELIVER_DATE");
         this.deliverStatus = rs.getString("DELIVER_STATUS");
-        this.personID = rs.getInt("PERSON_ID");
-        this.computerID = rs.getInt("COMPUTER_ID");
         this.acceptDate = rs.getString("ACCEPT_DATE");
+        p = new Person();
+        p.setOfficerID(rs.getInt("person_id"));
+        p.setFirstName(rs.getString("firstname"));
+        p.setLastName(rs.getString("lastname"));
+        c = new Computer();
+        c.setAssetYear(rs.getString("asset_year"));
+        c.setAssetGet(rs.getInt("asset_get"));
+        c.setAssetNumber(rs.getString("asset_number"));
+        c.setTypeID(rs.getInt("asset_type"));
+        Map properties = new HashMap();
+        properties.put("model", rs.getString("model"));
+        properties.put("brand", rs.getString("brand"));
+        cp = new ComputerSpec(properties);
+        c.setSpec(cp);
     }
 
     public Boolean insertDeliverAsset(DeliverAsset deliverAsset) {
@@ -70,8 +108,11 @@ public class DeliverAsset {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_CREATE_DELIVER);
             stm.setString(1, d.getDeliverDate());
-            stm.setInt(2, d.getPersonID());
-            stm.setInt(3, d.getComputerID());
+            stm.setInt(2, d.getP().getOfficerID());
+            stm.setString(3, d.getC().getAssetYear());
+            stm.setInt(4, d.getC().getAssetGet());
+            stm.setString(5, d.getC().getAssetNumber());
+            stm.setInt(6, d.getC().getTypeID());
             stm.executeUpdate();
             result = true;
         } catch (SQLException ex) {
@@ -95,9 +136,9 @@ public class DeliverAsset {
         boolean result = false;
         try {
             conn = ConnectionBuilder.getConnection();
-            stm = conn.prepareStatement(SQL_UPDATE_STATUS);
+            stm = conn.prepareStatement(SQL_UPDATE_DELIVER_STATUS);
             stm.setString(1, updateStatus);
-            stm.setString(2, acceptDate);            
+            stm.setString(2, acceptDate);
             stm.setInt(3, deliverID);
             stm.executeUpdate();
             result = true;
@@ -115,9 +156,60 @@ public class DeliverAsset {
         }
         return result;
     }
+    
+    public Boolean updateStatus(String updateStatus, int deliverID) {
+        Connection conn = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_UPDATE_STATUS);
+            stm.setString(1, updateStatus);
+            stm.setInt(2, deliverID);
+            stm.executeUpdate();
+            result = true;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return result;
+    }
+    
+    public Boolean receiveDeliver(String updateStatus, int deliverID) {
+        Connection conn = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_UPDATE_STATUS);
+            stm.setString(1, updateStatus);
+            stm.setInt(2, deliverID);
+            stm.executeUpdate();
+            result = true;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return result;
+    }
 
-
-    public static DeliverAsset searchByComputer(int assetID) {
+    public static DeliverAsset searchByComputer(String assetYear, int assetGet, String assetNumber, int assetType) {
         DeliverAsset d = null;
         Connection conn = null;
         PreparedStatement stm = null;
@@ -125,7 +217,10 @@ public class DeliverAsset {
         try {
             conn = ConnectionBuilder.getConnection();
             stm = conn.prepareStatement(SQL_SEARCH_ASSET_ID);
-            stm.setInt(1, assetID);
+            stm.setString(1, assetYear);
+            stm.setInt(2, assetGet);
+            stm.setString(3, assetNumber);
+            stm.setInt(4, assetType);
             rs = stm.executeQuery();
             if (rs.next()) {
                 d = new DeliverAsset(rs);
@@ -181,6 +276,75 @@ public class DeliverAsset {
         return d;
     }
     
+    public static DeliverAsset searchByReceiveStatus(int personID) {
+        DeliverAsset d = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_SEARCH_RECIEVE);
+            stm.setInt(1, personID);
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                d = new DeliverAsset(rs);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                rs.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return d;
+    }
+    
+    public static DeliverAsset searchByForeignKey(DeliverAsset searchAsset) {
+        DeliverAsset d = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        DeliverAsset cd = searchAsset;
+        try {
+            conn = ConnectionBuilder.getConnection();
+            stm = conn.prepareStatement(SQL_SEARCH_BY_FOREIGN_KEY);
+            stm.setInt(1, cd.getP().getOfficerID());
+            stm.setString(2, cd.getC().getAssetYear());
+            stm.setInt(3, cd.getC().getAssetGet());
+            stm.setString(4, cd.getC().getAssetNumber());
+            stm.setInt(5, cd.getC().getTypeID());
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                d = new DeliverAsset(rs);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                stm.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignored */ }
+            try {
+                rs.close();
+            } catch (Exception e) {
+                /* ignored */ }
+        }
+        return d;
+    }
+
     public static Map countDeliver() {
         Connection conn = null;
         PreparedStatement stm = null;
@@ -256,20 +420,20 @@ public class DeliverAsset {
         this.acceptDate = acceptDate;
     }
 
-    public int getPersonID() {
-        return personID;
+    public Person getP() {
+        return p;
     }
 
-    public void setPersonID(int personID) {
-        this.personID = personID;
+    public void setP(Person p) {
+        this.p = p;
     }
 
-    public int getComputerID() {
-        return computerID;
+    public Computer getC() {
+        return c;
     }
 
-    public void setComputerID(int computerID) {
-        this.computerID = computerID;
+    public void setC(Computer c) {
+        this.c = c;
     }
 
 }

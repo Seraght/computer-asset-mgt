@@ -39,6 +39,7 @@ public class ComputerSpec {
     public String getDescription() {
         return (String) properties.get("description");
     }
+    
 
     public boolean matches(ComputerSpec otherSpec) {
         for (Iterator i = otherSpec.getProperties().keySet().iterator();

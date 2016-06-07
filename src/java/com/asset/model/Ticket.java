@@ -24,11 +24,17 @@ public class Ticket {
     private String ticketStatusName;
     private String ticketSolveDetail;
     private String ticketSolveDate;
-    private int personReportID;
+    private int personID;
     private String firstName;
     private String lastName;
-    private int assetReportID;
+    private String assetYear;
+    private int assetGet;
     private String assetNumber;
+    private int assetType;
+    private String ticketOngoingDate;
+    private int review;
+    private Computer c;
+    private Person p;
 
     public Ticket() {
     }
@@ -47,16 +53,19 @@ public class Ticket {
         this.ticketDate = rs.getString("TICKET_DATE");
         this.ticketDescription = rs.getString("TICKET_DESCRIPTION");
         this.ticketStatus = rs.getInt("TICKET_STATUS");
-        this.ticketSolveDetail = rs.getString("TICKET_SOLVE");
+        this.ticketSolveDetail = rs.getString("ticket_solve_description");
         this.ticketSolveDate = rs.getString("TICKET_SOLVE_DATE");
-        this.personReportID = rs.getInt("PERSON_REPORT_ID");
-        this.assetReportID = rs.getInt("ASSET_REPORT_ID");
-        Person p = Person.searchPerson(personReportID);
-        this.firstName = p.getFirstName();
-        this.lastName = p.getLastName();
-        Computer c = Asset.searchByID(assetReportID);
-        this.assetNumber = c.getAssetNumber();
+        this.personID = rs.getInt("person_id");
+        this.assetYear = rs.getString("asset_year");
+        this.assetGet = rs.getInt("asset_get");
+        this.assetNumber = rs.getString("asset_number");
+        this.assetType = rs.getInt("asset_type");
         this.ticketStatusName = rs.getString("STATUS_NAME");
+        this.ticketOngoingDate = rs.getString("ticket_ongoing_date");
+        this.review = rs.getInt("review");
+        p = new Person();
+        p.setFirstName(rs.getString("firstname"));
+        p.setLastName(rs.getString("lastname"));
     }
 
     public int getTicketID() {
@@ -105,13 +114,6 @@ public class Ticket {
         return ticketSolveDate;
     }
 
-
-    public int getPersonReportID() {
-        Person p = Person.searchPerson(this.personReportID);
-        
-        return personReportID;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -128,13 +130,6 @@ public class Ticket {
         this.lastName = lastName;
     }
 
-    public int getAssetReportID() {
-        return assetReportID;
-    }
-
-    public void setAssetReportID(int assetReportID) {
-        this.assetReportID = assetReportID;
-    }
 
     public String getAssetNumber() {
         return assetNumber;
@@ -150,6 +145,70 @@ public class Ticket {
 
     public void setTicketStatusName(String ticketStatusName) {
         this.ticketStatusName = ticketStatusName;
+    }
+
+    public int getPersonID() {
+        return personID;
+    }
+
+    public void setPersonID(int personID) {
+        this.personID = personID;
+    }
+
+    public String getAssetYear() {
+        return assetYear;
+    }
+
+    public void setAssetYear(String assetYear) {
+        this.assetYear = assetYear;
+    }
+
+    public int getAssetGet() {
+        return assetGet;
+    }
+
+    public void setAssetGet(int assetGet) {
+        this.assetGet = assetGet;
+    }
+
+    public int getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(int assetType) {
+        this.assetType = assetType;
+    }
+
+    public Computer getC() {
+        return c;
+    }
+
+    public void setC(Computer c) {
+        this.c = c;
+    }
+
+    public Person getP() {
+        return p;
+    }
+
+    public void setP(Person p) {
+        this.p = p;
+    }
+
+    public String getTicketOngoingDate() {
+        return ticketOngoingDate;
+    }
+
+    public void setTicketOngoingDate(String ticketOngoingDate) {
+        this.ticketOngoingDate = ticketOngoingDate;
+    }
+
+    public int getReview() {
+        return review;
+    }
+
+    public void setReview(int review) {
+        this.review = review;
     }
     
     

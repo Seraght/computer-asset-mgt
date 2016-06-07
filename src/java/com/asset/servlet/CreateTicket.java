@@ -11,7 +11,6 @@ import com.asset.model.Person;
 import com.asset.model.ProblemReport;
 import com.asset.model.Ticket;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.servlet.ServletException;
@@ -41,11 +40,17 @@ public class CreateTicket extends HttpServlet {
         String message = "";
         String target = null;
         Computer c = new Computer();
-        c = Asset.searchByNumber(request.getParameter("assetNumber"));
+        
+        String assetYear = request.getParameter("assetYear");
+        int assetGet = Integer.parseInt(request.getParameter("assetGet"));
+        String assetNumber = request.getParameter("assetNumber");
+        int assetType = Integer.parseInt(request.getParameter("assetType"));
+        
+        
+        c = Asset.searchByID(assetYear, assetGet, assetNumber, assetType);
         Person p = Person.searchPerson((int)request.getSession().getAttribute("officerID"));
         Ticket t = new Ticket(request.getParameter("ticketTitle"), request.getParameter("ticketDescription"));
         ProblemReport pr = new ProblemReport();
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         Boolean result = pr.createTicket(t, p, c);
         
         if (result != false) {

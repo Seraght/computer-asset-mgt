@@ -42,18 +42,31 @@ public class SearchAsset extends HttpServlet {
         String message = "";
         String target = null;
         int count = 0;
+        String subYear = null;
+        int getID = 0;
+        int getType = 0;
 
         String assetYear = request.getParameter("assetYear");
-        String subYear = assetYear.substring(3);
+        if (assetYear != "") {
+            subYear = assetYear.substring(3);
+        }
+        
         int assetGet = Integer.parseInt(request.getParameter("assetGet"));
+        if (assetGet != 0) {
+            getID = assetGet;
+        }
+        
         int typeID = Integer.parseInt(request.getParameter("typeID"));
+        if (typeID != 0) {
+            getType = typeID;
+        }
         
         Map properties = new HashMap();
         properties.put("model", request.getParameter("model"));
         properties.put("brand", request.getParameter("brand"));
         ComputerSpec specSearch = new ComputerSpec(properties);
         String serial = request.getParameter("serial");
-        Computer computerSearch = new Computer(subYear,assetGet,typeID, serial, specSearch);
+        Computer computerSearch = new Computer(subYear,getID,typeID, serial, specSearch);
         List<Computer> computers = Asset.searchComputer(computerSearch);
         
         List<InsertProperties> is = InsertProperties.searchAllType();

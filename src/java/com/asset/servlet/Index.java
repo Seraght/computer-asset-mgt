@@ -8,10 +8,7 @@ package com.asset.servlet;
 import com.asset.model.Asset;
 import com.asset.model.DeliverAsset;
 import com.asset.model.ProblemReport;
-import com.asset.model.Ticket;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,17 +42,17 @@ public class Index extends HttpServlet {
         } else {
             message = "ไม่พบข้อมูล";
         }
+        
+        Map mtTicket = ProblemReport.countTime();
+        if (mtTicket != null) {
+            request.setAttribute("count_time", mtTicket);
+        } else {
+            message = "ไม่พบข้อมูล";
+        }
 
         Map mAsset = Asset.countAsset();
         if (mAsset != null) {
             request.setAttribute("count_asset", mAsset);
-        } else {
-            message = "ไม่พบข้อมูล";
-        }
-        
-        Map mDeliver = DeliverAsset.countDeliver();
-        if (mDeliver != null) {
-            request.setAttribute("count_deliver", mDeliver);
         } else {
             message = "ไม่พบข้อมูล";
         }
