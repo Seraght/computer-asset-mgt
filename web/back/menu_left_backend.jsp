@@ -12,8 +12,10 @@
             <ul class="nav nav-sidebar">
                 <li>จัดการครุภัณฑ์</li>
                 <li><a href="/cam/addform">เพิ่มครุภัณฑ์</a></li>
+                <li><a href="/cam/addmultiform">เพิ่มครุภัณฑ์แบบกลุ่ม</a></li>
                 <li><a href="/cam/searchform">ค้นหาครุภัณฑ์</a></li>
-                
+                <li><a href="/cam/viewdeleteasset">ครุภัณฑ์ที่ถูกลบ</a></li>
+                <li><a href="/cam/back/search_donate_asset.jsp">บริจาคครุภัณฑ์</a></li>
             </ul>
             <ul class="nav nav-sidebar">
                 <li>ระบบส่งมอบครุภัณฑ์</li>

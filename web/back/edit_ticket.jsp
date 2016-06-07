@@ -26,11 +26,11 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">ชื่อผู้แจ้ง</label>
                     <div class="col-sm-4">
-                        <p class="form-control-static">${ticket.firstName}&nbsp;${ticket.lastName}</p>
+                        <p class="form-control-static">${ticket.p.firstName}&nbsp;${ticket.p.lastName}</p>
                     </div>
                     <label class="col-sm-2 control-label">หมายเลขครุภัณฑ์</label>
                     <div class="col-sm-4">
-                        <p class="form-control-static">${ticket.assetNumber}</p>
+                        <p class="form-control-static">${ticket.assetYear}-${ticket.assetGet}-${ticket.assetNumber}-${ticket.assetType}</p>
                     </div>
                 </div>	
                 <div class="form-group">
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">รายละเอียดของปัญหา</label>
+                    <label class="col-sm-2 control-label" >รายละเอียดของปัญหา</label>
                     <div class="col-sm-10">
                         <p class="form-control-static">${ticket.ticketDescription}</p>
                     </div>
@@ -56,16 +56,25 @@
                                 <c:when test="${ticket.ticketStatus == 2}">
                                     <c:set var="choose2" value="selected"/>
                                 </c:when>
+                                <c:when test="${ticket.ticketStatus == 3}">
+                                    <c:set var="choose3" value="selected"/>
+                                </c:when>
+                                <c:when test="${ticket.ticketStatus == 4}">
+                                    <c:set var="choose4" value="selected"/>
+                                </c:when>
                             </c:choose>
                             <option value="1" ${choose1}>เปิดใหม่</option>
-                            <option value="2" ${choose2}>แก้ไขแล้ว</option>
+                            <option value="2" ${choose2}>รับเรื่อง</option>
+                            <option value="3" ${choose3}>ส่งซ่อม</option>
+                            <option value="4" ${choose4}>แก้ไขแล้ว</option>
+                            <option value="5" ${choose5}>ปิดงาน</option>
                         </select>
                     </div>
                 </div>   
                 <div class="form-group">
                     <label class="col-sm-2 control-label">รายละเอียดการแจ้งซ่อม</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="ticketSolveDetail" value="${ticket.ticketSolveDetail}" name="ticketSolveDetail">
+                        <textarea rows="6" cols="50" name="ticketSolveDetail" class="form-control" id="ticketSolveDetail">${ticket.ticketSolveDetail}</textarea>
                     </div>
                 </div>    
                 <div class="form-group">

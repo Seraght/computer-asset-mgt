@@ -16,9 +16,15 @@
         <%@ include file="/back/menu_left_backend.jsp"%>
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">เพิ่มครุภัณฑ์</h1>
+            <h1 class="page-header">เพิ่มครุภัณฑ์แบบกลุ่ม</h1>
 
-            <form class="form-horizontal" action="/cam/addasset" method="post">
+            <form class="form-horizontal" action="/cam/addmultiasset" method="post">
+                <div class="form-group">
+                    <label for="inputSerial" class="col-sm-2 control-label">จำนวน</label>
+                    <div class="col-sm-1">
+                        <input type="number" class="form-control" id="num" placeholder="1" name="num">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="inputAssetYear" class="col-sm-2 control-label">ปีงบประมาณที่จัดซื้อ</label>
                     <div class="col-sm-2">
@@ -67,16 +73,11 @@
 
                 </div>
                 <div class="form-group">
-                    <label for="inputSerial" class="col-sm-2 control-label">Serial Number</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="serial" placeholder="ระบุ Serial Number" name="serial">
-                    </div>
                     <label for="inputPrice" class="col-sm-2 control-label">ราคา</label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="price" placeholder="10,000" name="price">
+                        <input type="hidden" class="form-control" id="serial" value="Empty" name="serial">
                     </div>
-                </div>
-                <div class="form-group">
                     <label for="inputBuyDate" class="col-sm-2 control-label">วันที่จัดซื้อครุภัณฑ์</label>
                     <div class="col-sm-4">
                         <input type="text" id="dp1" class="span2 datepicker form-control" placeholder="2016-12-01" name="assetBuyDate">

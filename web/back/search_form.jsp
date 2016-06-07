@@ -21,23 +21,26 @@
                         <jsp:useBean id="now" class="java.util.Date" />
                         <fmt:formatDate var="year" value="${now}" pattern="yyyy" />
                         <select class="form-control" name="assetYear">
+                            <option value=""></option>
                             <c:forEach var="i" begin="0" end="10" >
                                 <option value=" ${year+543-i}"> ${year+543-i}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <label for="inputAssetGet" class="col-sm-1 control-label">การได้มา</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
 
                         <select class="form-control" name="assetGet">
+                            <option value="0"></option>
                             <c:forEach items="${get}" var="g" varStatus="vs" >
                                 <option value="${g.assetGetID}">${g.assetGet}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <label for="inputTypeID" class="col-sm-2 control-label">ประเภทครุภัณฑ์</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <select class="form-control" name="typeID">
+                            <option value="0"></option>
                             <c:forEach items="${properties}" var="p" varStatus="vs" >
                                 <option value="${p.assetTypeID}">${p.assetType}</option>
                             </c:forEach>
@@ -51,7 +54,12 @@
                     </div>
                     <label for="inputBrand" class="col-sm-2 control-label">ยี่ห้อ</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="brand" placeholder="Dell" name="brand">
+                        <select class="form-control" name="brand">
+                            <option value=""></option>
+                            <c:forEach items="${brand}" var="b" varStatus="vs" >
+                                <option value="${b.assetBrand}">${b.assetBrand}</option>
+                            </c:forEach>
+                        </select>
                     </div>
 
                 </div>
@@ -67,18 +75,19 @@
                     </div>
                 </div>
             </form>
-            <h4 class="sub-header">${message}</h4>
+            <h3 class="sub-header">${message}</h3>
             <div class="table-responsive">
                 <c:choose>
                     <c:when test="${computers!=null}">
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="dataTables-example">
                             <thead>
                                 <tr>
-                                    <th>ลำดับที่</th>
+                                    <th align="center">ลำดับที่</th>
                                     <th>รหัสครุภัณฑ์</th>
                                     <th>ยี่ห้อ</th>
                                     <th>รุ่น</th>
                                     <th>ชนิด</th>
+                                    <th>ลบ</th>
                                     <th>แก้ไข</th>
                                 </tr>
                             </thead>
@@ -98,7 +107,8 @@
                                         <td>${c.spec["brand"]}</td>
                                         <td>${c.spec["model"]}</td>
                                         <td>${c.typeName}</td> 
-                                        <td ><a href="/cam/editasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><img src="images/edit_icon_mini.png" class="img-responsive"></a></td>
+                                        <td><a href="/cam/removeasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}" data-confirm="คุณยืนยันที่จะลบครุภัณฑ์หรือไม่ (ครุภัณฑ์ที่ถูกลบ จะย้ายไปอยู่ในหัวข้อ 'ครุภัณฑ์ที่ถูกลบ')"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                        <td><a href="/cam/editasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -115,5 +125,26 @@
         </div>
 
         <%@include file="/js_tag.html" %>
+        <script>
+            $(document).ready(function () {
+                $('a[data-confirm]').click(function (ev) {
+                    var href = $(this).attr('href');
+                    if (!$('#dataConfirmModal').length) {
+                        $('body').append('<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true" tabindex="-1"><div class="modal-dialog modal-sm"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3 id="dataConfirmLabel">ยืนยันการลบครุภัณฑ์</h3></div><div class="modal-body"></div><div class="modal-footer"><a class="btn btn-primary" id="dataConfirmOK">OK</a><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button></div></div></div></div>');
+                    }
+                    $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+                    $('#dataConfirmOK').attr('href', href);
+                    $('#dataConfirmModal').modal({show: true});
+                    return false;
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-example').DataTable({
+                    responsive: true
+                });
+            });
+        </script>
     </body>
 </html>

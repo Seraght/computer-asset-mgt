@@ -5,6 +5,7 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <%@include file="/header_tag.html" %>
@@ -12,23 +13,24 @@
         <jsp:include page="/menu_top.jsp" />
         <%@ include file="/back/menu_left_backend.jsp"%>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h4 class="sub-header">${message}</h4>
+            <h3 class="sub-header">${message}</h3>
             <div class="table-responsive">
                 <c:choose>
-                    <c:when test="${tickets!=null}">
+                    <c:when test="${computers!=null}">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>ลำดับที่</th>
-                                    <th>วัน - เวลาที่แจ้ง</th>
-                                    <th>เรื่องที่แจ้ง</th>
-                                    <th>ชื่อผู้แจ้ง</th>
+                                    <th align="center">ลำดับที่</th>
+                                    <th>รหัสครุภัณฑ์</th>
+                                    <th>ยี่ห้อ</th>
+                                    <th>รุ่น</th>
+                                    <th>ชนิด</th>
                                     <th>สถานะ</th>
-                                    <th>ดำเนินการ</th>
+                                    <th>กู้คืน</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach items="${tickets}" var="t" varStatus="vs" >
+                                <c:forEach items="${computers}" var="c" varStatus="vs" >
                                     <c:choose>
                                         <c:when test="${vs.count%2==0}">
                                             <c:set var="bg" value="#FCFCFC" />
@@ -37,23 +39,30 @@
                                             <c:set var="bg" value="#EEEEEE" />
                                         </c:otherwise>
                                     </c:choose>
-                                    
                                     <tr style="background-color: ${bg}">
                                         <td>${vs.count}</td>
-                                        <td>${t.ticketDate}</td>
-                                        <td>${t.ticketTitle}</td>
-                                        <td>${t.p.firstName}&nbsp;${t.p.lastName}</td>
-                                        <td>${t.ticketStatusName}</td>
-                                        <td align="center"><a href="/cam/editticketstatus?ticketID=${t.ticketID}"><img src="images/edit_icon_mini.png" class="img-responsive"></a></td> 
+                                        <td>${c.assetYear}-${c.assetGet}-${c.assetNumber}-${c.typeID}</td>
+                                        <td>${c.spec["brand"]}</td>
+                                        <td>${c.spec["model"]}</td>
+                                        <td>${c.typeName}</td> 
+                                        <td>${c.assetStatus}</td>
+                                        <td><a href="/cam/restoreasset?assetYear=${c.assetYear}&assetGet=${c.assetGet}&assetNumber=${c.assetNumber}&typeID=${c.typeID}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
                         </table>
                     </c:when>
+                    <%--<c:otherwise>
+                        <table style="width:80%; margin-left: 30pt; background-color: beige">
+                            <tr><td><h3 style="color: red">${message}</h3><hr></td></tr>
+                            <tr><td><p style="padding-left: 50px">จะต้องใส่ % เพื่อทำการค้นหาข้อมูลทั้งหมด</p></td></tr>
+                        </table>
+                    </c:otherwise>--%>
                 </c:choose>
             </div>
         </div>
 
         <%@include file="/js_tag.html" %>
+        
     </body>
 </html>

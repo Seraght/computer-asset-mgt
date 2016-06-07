@@ -24,14 +24,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">ชื่อผู้รับ</label>
                     <div class="col-sm-4">
-                        <p class="form-control-static">${person.firstName}&nbsp;${person.lastName}</p>
+                        <p class="form-control-static">${deliver.p.firstName}&nbsp;${deliver.p.lastName}</p>
                     </div>
                     
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">หมายเลขครุภัณฑ์</label>
                     <div class="col-sm-4">
-                        <p class="form-control-static">${computer.assetNumber}</p>
+                        <p class="form-control-static">${deliver.c.assetYear}-${deliver.c.assetGet}-${deliver.c.assetNumber}-${deliver.c.typeID}</p>
                     </div>
                 </div>    
                 <div class="form-group">

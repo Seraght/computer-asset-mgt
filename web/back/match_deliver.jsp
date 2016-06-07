@@ -20,11 +20,18 @@
                     <label for="personList" class="col-sm-5 control-label col-sm-offset-2">ชื่อเจ้าหน้าที่</label>
                     <div class="col-sm-8 col-sm-offset-2 ">
                         <select class="form-control" name="personID">
-                            <option value="${personID}">${personName}</option>
                             <c:choose>
                                 <c:when test="${listPersons!=null}">
                                     <c:forEach items="${listPersons}" var="lp" >
-                                        <option value="${lp.officerID}">${lp.firstName}&nbsp;${lp.lastName}</option>
+                                        <c:choose>
+                                            <c:when test="${personID == lp.officerID}">
+                                                <option value="${lp.officerID}" selected>${lp.firstName}&nbsp;${lp.lastName}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${lp.officerID}">${lp.firstName}&nbsp;${lp.lastName}</option>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        
                                     </c:forEach>
                                 </c:when>
                             </c:choose>
@@ -34,12 +41,18 @@
                 <div class="form-group col-md-6">
                     <label for="assetList" class="col-sm-6 control-label col-sm-offset-2">หมายเลขครุภัณฑ์</label>
                     <div class="col-sm-8 col-sm-offset-2">
-                        <select class="form-control" name="assetID">
-                            <option value="${assetID}">${assetNumber}</option>
+                        <select class="form-control" name="assetKey">
                             <c:choose>
                                 <c:when test="${listComputers!=null}">
                                     <c:forEach items="${listComputers}" var="lc" >
-                                        <option value="${lc.assetID}">${lc.assetNumber}</option>
+                                        <c:choose>
+                                            <c:when test="${assetYear == lc.assetYear&&assetGet==lc.assetGet&&assetNumber==lc.assetNumber&&typeID==lc.typeID}">
+                                                <option value="${lc.assetYear}-${lc.assetGet}-${lc.assetNumber}-${lc.typeID}" selected>${lc.assetYear}-${lc.assetGet}-${lc.assetNumber}-${lc.typeID}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${lc.assetYear}-${lc.assetGet}-${lc.assetNumber}-${lc.typeID}">${lc.assetYear}-${lc.assetGet}-${lc.assetNumber}-${lc.typeID}</option>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </c:when>
                             </c:choose>
