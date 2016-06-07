@@ -23,8 +23,8 @@
                                     <th>วันที่-เวลา</th>
                                     <th>เรื่องที่แจ้ง</th>
                                     <th>ชื่อผู้แจ้ง</th>
+                                    <th>สถานะ</th>
                                     <th>แก้ไข</th>
-                                    <%--<th>ยกเลิก</th>--%>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,7 +42,8 @@
                                         <td>${vs.count}</td>
                                         <td>${t.ticketDate}</td>
                                         <td>${t.ticketTitle}</td>
-                                        <td>${t.firstName}&nbsp;${t.lastName}</td>
+                                        <td>${t.p.firstName}&nbsp;${t.p.lastName}</td>
+                                        <td>${t.ticketStatusName}</td>
                                         <td align="center"><a href="/cam/editticket?ticketID=${t.ticketID}"><img src="images/edit_icon_mini.png" class="img-responsive"></a></td> 
                                         <%--<td align="center"><img src="images/delete_icon_mini.png" class="img-responsive"></td>--%>
                                     </tr>

@@ -19,9 +19,18 @@
                     <div class="col-sm-4">
                         <p class="form-control-static">${user}&nbsp;${lastName}</p>
                     </div>
-                    <label for="assetNumber" class="col-sm-2 control-label">หมายเลขครุภัณฑ์</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="model" placeholder="57-1-0xx-01" name="assetNumber">
+                    <label for="assetNumber" class="col-sm-2 control-label">หมายเลขครุภัณฑ์<br>(ตัวอย่าง 57-1-001-1)</label>
+                    <div class="col-sm-1">
+                        <input type="text" class="form-control" id="assetYear" placeholder="57" name="assetYear">
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="text" class="form-control" id="assetGet" placeholder="1" name="assetGet">
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="text" class="form-control" id="assetNumber" placeholder="001" name="assetNumber">
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="text" class="form-control" id="assetType" placeholder="1" name="assetType">
                     </div>
                 </div>
                 <div class="form-group">

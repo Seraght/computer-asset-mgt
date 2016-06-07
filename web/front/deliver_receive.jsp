@@ -16,31 +16,41 @@
             <h1 class="page-header">รับมอบครุภัณฑ์</h1>
             <c:choose>
                 <c:when test="${message==null}">
-                    
+
                     <form class="form-horizontal" action="/cam/acceptdeliver" method="post">
 
                         <div class="form-group">
-                            <h4 class="col-sm-2 control-label">ชื่อผู้รับมอบ</h4>
+                            <h3 class="col-sm-2 control-label">ชื่อผู้รับมอบ</h3>
                             <div class="col-sm-4">
-                                <h4 class="form-control-static">${person.firstName}&nbsp;${person.lastName}</h4>
+                                <h3 class="form-control-static">${deliver.p.firstName}&nbsp;${deliver.p.lastName}</h3>
                             </div>
                             <input type="hidden" class="form-control" id="deliverID" value="${deliver.deliverID}" name="deliverID">
                         </div>
                         <div class="form-group">
-                            <h4 class="col-sm-2 control-label">ครุภัณฑ์ที่ส่งมอบ</h4>
+                            <h3 class="col-sm-3 control-label">ครุภัณฑ์ที่ส่งมอบ</h3>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">หมายเลขครุภัณฑ์</label>
                             <div class="col-sm-4">
-                                <p class="form-control-static">${computer.assetNumber}</p>
-                                
-                                <input type="hidden" class="form-control" id="assetNumber" value="${computer.assetNumber}" name="assetNumber">
-                            </div>
-                            <label class="col-sm-2 control-label">ยี่ห้อ - รุ่น</label>
-                            <div class="col-sm-4">
-                                <p class="form-control-static">${computer.spec["brand"]}&nbsp;${computer.spec["model"]}</p>
-                            </div>
+                                <p class="form-control-static">${deliver.c.assetYear}-${deliver.c.assetGet}-${deliver.c.assetNumber}-${deliver.c.typeID}</p>
 
+                                <input type="hidden" name="assetGet" value="${deliver.c.assetGet}">
+                                <input type="hidden" name="assetYear" value="${deliver.c.assetYear}">
+                                <input type="hidden" name="assetNumber" value="${deliver.c.assetNumber}">
+                                <input type="hidden" name="typeID" value="${deliver.c.typeID}">
+                            </div>
+                            
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">ยี่ห้อ</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">${deliver.c.spec["brand"]}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">รุ่น</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">${deliver.c.spec["model"]}</p>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
